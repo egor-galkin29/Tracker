@@ -13,6 +13,7 @@
 		2FAA64C12CCEE5E90074CE47 /* Tracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2FAA64BF2CCEE5E90074CE47 /* Tracker.xcdatamodeld */; };
 		2FAA64C32CCEE5EC0074CE47 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2FAA64C22CCEE5EC0074CE47 /* Assets.xcassets */; };
 		2FAA64C62CCEE5EC0074CE47 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 2FAA64C52CCEE5EC0074CE47 /* Base */; };
+		2FAA64D32CD2B8100074CE47 /* UIColor+extantion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAA64D22CD2B8100074CE47 /* UIColor+extantion.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		2FAA64C22CCEE5EC0074CE47 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2FAA64C52CCEE5EC0074CE47 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2FAA64C72CCEE5EC0074CE47 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2FAA64D22CD2B8100074CE47 /* UIColor+extantion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+extantion.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 		2FAA64B52CCEE5E90074CE47 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				2FAA64CD2CCFF8280074CE47 /* Helper */,
 				2FAA64B62CCEE5E90074CE47 /* AppDelegate.swift */,
 				2FAA64B82CCEE5E90074CE47 /* SceneDelegate.swift */,
 				2FAA64BA2CCEE5E90074CE47 /* ViewController.swift */,
@@ -65,6 +68,14 @@
 				2FAA64BF2CCEE5E90074CE47 /* Tracker.xcdatamodeld */,
 			);
 			path = Tracker;
+			sourceTree = "<group>";
+		};
+		2FAA64CD2CCFF8280074CE47 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				2FAA64D22CD2B8100074CE47 /* UIColor+extantion.swift */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,6 +148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FAA64D32CD2B8100074CE47 /* UIColor+extantion.swift in Sources */,
 				2FAA64C12CCEE5E90074CE47 /* Tracker.xcdatamodeld in Sources */,
 				2FAA64BB2CCEE5E90074CE47 /* ViewController.swift in Sources */,
 				2FAA64B72CCEE5E90074CE47 /* AppDelegate.swift in Sources */,

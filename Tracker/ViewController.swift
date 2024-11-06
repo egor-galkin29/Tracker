@@ -1,7 +1,7 @@
 import UIKit
 // MARK: ViewController
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: UI
     
@@ -27,15 +27,12 @@ class ViewController: UIViewController {
         label.textAlignment = .center
         return label
     }()
-    
-    private let searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.placeholder = "Поиск"
-        return searchBar
-    }()
         
     // MARK: Public Properties
-
+    
+    private let searchContainer = UIView()
+    let searchBar = UISearchBar()
+    
     // MARK: Private Properties
     
     // MARK: Override Methods
@@ -46,6 +43,7 @@ class ViewController: UIViewController {
         setupView()
         setUpNavigationBar()
         addAllConstraints()
+        setupSearchBar()
     }
     
     // MARK: Public Methods
@@ -88,7 +86,7 @@ class ViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = .white
         
-        [imageView, emptyLabel, titleLabel, searchBar].forEach {
+        [imageView, emptyLabel, titleLabel].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -98,7 +96,6 @@ class ViewController: UIViewController {
         addImageViewConstraints()
         addEmptyLabelConstraints()
         addTitleLableConstraints()
-        addSearchBarConstraints()
     }
     
     private func addImageViewConstraints() {
@@ -121,17 +118,40 @@ class ViewController: UIViewController {
         let guide = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-        titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+        titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
         titleLabel.topAnchor.constraint(equalTo: guide.topAnchor)
         ])
     }
     
-    private func addSearchBarConstraints() {
+    @objc private func addHabbite(){}
+}
+
+extension ViewController {
+   
+    func setupSearchBar() {
+        searchBar.placeholder = "Поиск"
+        searchBar.delegate = self
+        searchBar.searchTextField.layer.masksToBounds = true
+        searchBar.backgroundImage = UIImage()
+        
+        searchContainer.addSubview(searchBar)
+        view.addSubview(searchContainer)
+        
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchContainer.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 7),
-            searchBar.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor)
+            searchContainer.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 7),
+            searchContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            searchContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            searchContainer.heightAnchor.constraint(equalToConstant: 44),
+
+            searchBar.topAnchor.constraint(equalTo: searchContainer.topAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: searchContainer.leadingAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: searchContainer.trailingAnchor),
+            searchBar.bottomAnchor.constraint(equalTo: searchContainer.bottomAnchor)
         ])
     }
     
-    @objc private func addHabbite(){}
+
 }

@@ -9,23 +9,27 @@
 /* Begin PBXBuildFile section */
 		2FAA64B72CCEE5E90074CE47 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAA64B62CCEE5E90074CE47 /* AppDelegate.swift */; };
 		2FAA64B92CCEE5E90074CE47 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAA64B82CCEE5E90074CE47 /* SceneDelegate.swift */; };
-		2FAA64BB2CCEE5E90074CE47 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAA64BA2CCEE5E90074CE47 /* ViewController.swift */; };
+		2FAA64BB2CCEE5E90074CE47 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAA64BA2CCEE5E90074CE47 /* MainViewController.swift */; };
 		2FAA64C12CCEE5E90074CE47 /* Tracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2FAA64BF2CCEE5E90074CE47 /* Tracker.xcdatamodeld */; };
 		2FAA64C32CCEE5EC0074CE47 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2FAA64C22CCEE5EC0074CE47 /* Assets.xcassets */; };
 		2FAA64C62CCEE5EC0074CE47 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 2FAA64C52CCEE5EC0074CE47 /* Base */; };
 		2FAA64D32CD2B8100074CE47 /* UIColor+extantion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAA64D22CD2B8100074CE47 /* UIColor+extantion.swift */; };
+		2FAA64D82CDBD6850074CE47 /* StatisticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAA64D72CDBD6850074CE47 /* StatisticViewController.swift */; };
+		2FAA64DA2CDBED670074CE47 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAA64D92CDBED670074CE47 /* TabBarController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2FAA64B32CCEE5E90074CE47 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FAA64B62CCEE5E90074CE47 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2FAA64B82CCEE5E90074CE47 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		2FAA64BA2CCEE5E90074CE47 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2FAA64BA2CCEE5E90074CE47 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		2FAA64C02CCEE5E90074CE47 /* Tracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Tracker.xcdatamodel; sourceTree = "<group>"; };
 		2FAA64C22CCEE5EC0074CE47 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2FAA64C52CCEE5EC0074CE47 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2FAA64C72CCEE5EC0074CE47 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2FAA64D22CD2B8100074CE47 /* UIColor+extantion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+extantion.swift"; sourceTree = "<group>"; };
+		2FAA64D72CDBD6850074CE47 /* StatisticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticViewController.swift; sourceTree = "<group>"; };
+		2FAA64D92CDBED670074CE47 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +65,7 @@
 				2FAA64CD2CCFF8280074CE47 /* Helper */,
 				2FAA64B62CCEE5E90074CE47 /* AppDelegate.swift */,
 				2FAA64B82CCEE5E90074CE47 /* SceneDelegate.swift */,
-				2FAA64BA2CCEE5E90074CE47 /* ViewController.swift */,
+				2FAA64D42CDBD4230074CE47 /* Presenters */,
 				2FAA64C22CCEE5EC0074CE47 /* Assets.xcassets */,
 				2FAA64C42CCEE5EC0074CE47 /* LaunchScreen.storyboard */,
 				2FAA64C72CCEE5EC0074CE47 /* Info.plist */,
@@ -76,6 +80,16 @@
 				2FAA64D22CD2B8100074CE47 /* UIColor+extantion.swift */,
 			);
 			path = Helper;
+			sourceTree = "<group>";
+		};
+		2FAA64D42CDBD4230074CE47 /* Presenters */ = {
+			isa = PBXGroup;
+			children = (
+				2FAA64BA2CCEE5E90074CE47 /* MainViewController.swift */,
+				2FAA64D72CDBD6850074CE47 /* StatisticViewController.swift */,
+				2FAA64D92CDBED670074CE47 /* TabBarController.swift */,
+			);
+			path = Presenters;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,7 +164,9 @@
 			files = (
 				2FAA64D32CD2B8100074CE47 /* UIColor+extantion.swift in Sources */,
 				2FAA64C12CCEE5E90074CE47 /* Tracker.xcdatamodeld in Sources */,
-				2FAA64BB2CCEE5E90074CE47 /* ViewController.swift in Sources */,
+				2FAA64BB2CCEE5E90074CE47 /* MainViewController.swift in Sources */,
+				2FAA64D82CDBD6850074CE47 /* StatisticViewController.swift in Sources */,
+				2FAA64DA2CDBED670074CE47 /* TabBarController.swift in Sources */,
 				2FAA64B72CCEE5E90074CE47 /* AppDelegate.swift in Sources */,
 				2FAA64B92CCEE5E90074CE47 /* SceneDelegate.swift in Sources */,
 			);

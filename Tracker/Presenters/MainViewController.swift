@@ -1,7 +1,7 @@
 import UIKit
 // MARK: ViewController
 
-class ViewController: UIViewController, UISearchBarDelegate {
+final class MainViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: UI
     
@@ -27,7 +27,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         label.textAlignment = .center
         return label
     }()
-        
+    
     // MARK: Public Properties
     
     private let searchContainer = UIView()
@@ -36,7 +36,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
     // MARK: Private Properties
     
     // MARK: Override Methods
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,7 +47,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
     }
     
     // MARK: Public Methods
-
+    
     // MARK: Private Methods
     
     private func setUpNavigationBar() {
@@ -67,21 +67,21 @@ class ViewController: UIViewController, UISearchBarDelegate {
     }
     
     private func setupNavRightDateButton() {
-            let dateButton = UIButton(type: .custom)
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "d.M.yy"
-            let dateString = dateFormatter.string(from: Date())
-            
-            dateButton.setTitle(dateString, for: .normal)
-            dateButton.setTitleColor(.black, for: .normal)
-            dateButton.backgroundColor = UIColor(hex: "#F0F0F0")
-            
-            dateButton.layer.cornerRadius = 8
-            dateButton.contentEdgeInsets = UIEdgeInsets(top: 6, left: 12, bottom: 6, right: 12)
-            
-            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: dateButton)
-        }
+        let dateButton = UIButton(type: .custom)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "d.M.yy"
+        let dateString = dateFormatter.string(from: Date())
+        
+        dateButton.setTitle(dateString, for: .normal)
+        dateButton.setTitleColor(.black, for: .normal)
+        dateButton.backgroundColor = UIColor(hex: "#F0F0F0")
+        
+        dateButton.layer.cornerRadius = 8
+        dateButton.contentEdgeInsets = UIEdgeInsets(top: 6, left: 12, bottom: 6, right: 12)
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: dateButton)
+    }
     
     private func setupView() {
         view.backgroundColor = .white
@@ -100,7 +100,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
     
     private func addImageViewConstraints() {
         let guide = view.safeAreaLayoutGuide
-
+        
         NSLayoutConstraint.activate([
             imageView.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
             imageView.centerYAnchor.constraint(equalTo: guide.centerYAnchor)
@@ -118,16 +118,16 @@ class ViewController: UIViewController, UISearchBarDelegate {
         let guide = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-        titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-        titleLabel.topAnchor.constraint(equalTo: guide.topAnchor)
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            titleLabel.topAnchor.constraint(equalTo: guide.topAnchor)
         ])
     }
     
     @objc private func addHabbite(){}
 }
 
-extension ViewController {
-   
+extension MainViewController {
+    
     func setupSearchBar() {
         searchBar.placeholder = "Поиск"
         searchBar.delegate = self
@@ -139,13 +139,13 @@ extension ViewController {
         
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchContainer.translatesAutoresizingMaskIntoConstraints = false
-
+        
         NSLayoutConstraint.activate([
             searchContainer.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 7),
             searchContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             searchContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
             searchContainer.heightAnchor.constraint(equalToConstant: 44),
-
+            
             searchBar.topAnchor.constraint(equalTo: searchContainer.topAnchor),
             searchBar.leadingAnchor.constraint(equalTo: searchContainer.leadingAnchor),
             searchBar.trailingAnchor.constraint(equalTo: searchContainer.trailingAnchor),
@@ -153,5 +153,5 @@ extension ViewController {
         ])
     }
     
-
+    
 }

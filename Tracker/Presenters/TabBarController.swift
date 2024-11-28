@@ -9,7 +9,7 @@ final class TabBarController: UITabBarController {
     private var viewControllersList: [UIViewController] {
         
         // создаем первую кнопку
-        let mainVC = MainViewController()
+        let mainVC = TrackersViewController()
         let mainNavController = UINavigationController(rootViewController: mainVC)
         
         mainNavController.setNavigationBarHidden(false, animated: false)

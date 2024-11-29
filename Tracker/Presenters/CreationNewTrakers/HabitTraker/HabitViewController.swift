@@ -2,6 +2,9 @@ import UIKit
 
 final class HabitViewController: UIViewController {
     
+    var selectedCategory: String?
+    var selectedSchedule: String?
+    var schedule:[WeekDays] = []
     
     private lazy var viewControllerName: UILabel = {
         let label = UILabel()
@@ -36,7 +39,6 @@ final class HabitViewController: UIViewController {
         textField.leftViewMode = .always
         textField.isUserInteractionEnabled = true
         textField.addTarget(self, action: #selector(newTrackerName(_:)), for: .editingChanged)
-        textField.translatesAutoresizingMaskIntoConstraints = false
         
         return textField
     }()
@@ -47,9 +49,21 @@ final class HabitViewController: UIViewController {
         lable.font = .systemFont(ofSize: 17, weight: .regular)
         lable.textColor = .ypRed
         lable.isHidden = true
-        lable.translatesAutoresizingMaskIntoConstraints = false
         
         return lable
+    }()
+    
+    private lazy var habbitTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        tableView.tableFooterView = UIView()
+        tableView.layer.cornerRadius = 16
+        tableView.layer.masksToBounds = true
+        tableView.backgroundColor = .ypLightGrey
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        return tableView
     }()
     
     override func viewDidLoad() {
@@ -65,8 +79,10 @@ final class HabitViewController: UIViewController {
         }
         
         scrollView.addSubview(contentView)
-        contentView.addSubview(habbitNameTextField)
-        contentView.addSubview(warningLable)
+        [habbitNameTextField, warningLable, habbitTableView].forEach {
+            contentView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
         
         view.backgroundColor = .white
         
@@ -90,10 +106,18 @@ final class HabitViewController: UIViewController {
             habbitNameTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             habbitNameTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             habbitNameTextField.heightAnchor.constraint(equalToConstant: 75),
+            habbitNameTextField.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
             warningLable.topAnchor.constraint(equalTo: habbitNameTextField.bottomAnchor),
             warningLable.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             warningLable.heightAnchor.constraint(equalToConstant: 22),
+            
+            habbitTableView.topAnchor.constraint(equalTo: habbitNameTextField.bottomAnchor, constant: 24),
+            habbitTableView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            habbitTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            habbitTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            habbitTableView.heightAnchor.constraint(equalToConstant: 150),
+            
         ])
     }
     

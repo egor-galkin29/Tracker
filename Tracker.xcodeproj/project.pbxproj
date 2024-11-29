@@ -27,6 +27,8 @@
 		2FE362DC2CF7AF3E00D83A19 /* SupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE362DB2CF7AF3E00D83A19 /* SupplementaryView.swift */; };
 		2FE362DF2CF821AF00D83A19 /* CreationNewTrakersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE362DE2CF821AF00D83A19 /* CreationNewTrakersViewController.swift */; };
 		2FE362E22CF823D200D83A19 /* HabitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE362E12CF823D200D83A19 /* HabitViewController.swift */; };
+		2FE362E42CF9036600D83A19 /* extation+HabitTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE362E32CF9036600D83A19 /* extation+HabitTableView.swift */; };
+		2FE362E62CF94ACE00D83A19 /* ChoosingCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE362E52CF94ACE00D83A19 /* ChoosingCategoryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +54,8 @@
 		2FE362DB2CF7AF3E00D83A19 /* SupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplementaryView.swift; sourceTree = "<group>"; };
 		2FE362DE2CF821AF00D83A19 /* CreationNewTrakersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationNewTrakersViewController.swift; sourceTree = "<group>"; };
 		2FE362E12CF823D200D83A19 /* HabitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewController.swift; sourceTree = "<group>"; };
+		2FE362E32CF9036600D83A19 /* extation+HabitTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "extation+HabitTableView.swift"; sourceTree = "<group>"; };
+		2FE362E52CF94ACE00D83A19 /* ChoosingCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoosingCategoryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +157,8 @@
 			isa = PBXGroup;
 			children = (
 				2FE362E12CF823D200D83A19 /* HabitViewController.swift */,
+				2FE362E32CF9036600D83A19 /* extation+HabitTableView.swift */,
+				2FE362E52CF94ACE00D83A19 /* ChoosingCategoryViewController.swift */,
 			);
 			path = HabitTraker;
 			sourceTree = "<group>";
@@ -231,6 +237,7 @@
 				2FAA64D32CD2B8100074CE47 /* UIColor+extantion.swift in Sources */,
 				2FE362DA2CF5087E00D83A19 /* CollectionViewDelegate.swift in Sources */,
 				2FAA659C2CEF8A520074CE47 /* TrackerType.swift in Sources */,
+				2FE362E62CF94ACE00D83A19 /* ChoosingCategoryViewController.swift in Sources */,
 				2FAA64C12CCEE5E90074CE47 /* Tracker.xcdatamodeld in Sources */,
 				2FAA64BB2CCEE5E90074CE47 /* TrackersViewController.swift in Sources */,
 				2FE362DC2CF7AF3E00D83A19 /* SupplementaryView.swift in Sources */,
@@ -244,6 +251,7 @@
 				2FAA64B92CCEE5E90074CE47 /* SceneDelegate.swift in Sources */,
 				2FAA659E2CEF8AAB0074CE47 /* TrackerCategory.swift in Sources */,
 				2FE362D82CF5083000D83A19 /* CollectionViewDataSource.swift in Sources */,
+				2FE362E42CF9036600D83A19 /* extation+HabitTableView.swift in Sources */,
 				2FE362DF2CF821AF00D83A19 /* CreationNewTrakersViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -31,6 +31,7 @@ final class ChoosingCategoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         
         //                categoriesTableView.dataSource = self
         //                categoriesTableView.delegate = self

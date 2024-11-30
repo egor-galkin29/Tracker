@@ -13,20 +13,19 @@ extension HabitViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "optionCell")
         
         if indexPath.row == 0 {
+            let trackerCategory = selectedCategory ?? ""
             cell.textLabel?.text = "Категория"
-            //cell.detailTextLabel?.text = "Новая категория"
-            cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17)
-            //cell.detailTextLabel?.textColor = .grayYp
+            cell.detailTextLabel?.text = trackerCategory
+            cell.detailTextLabel?.textColor = .ypGray
         } else if indexPath.row == 1 {
+            let trackerSchedule = selectedSchedule ?? ""
             cell.textLabel?.text = "Расписание"
-            //cell.detailTextLabel?.text = selectedScheduleString()
-            //print("\(selectedScheduleString())")
-            cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17)
-            //cell.detailTextLabel?.textColor = .grayYp
+            cell.detailTextLabel?.text = trackerSchedule
+            cell.detailTextLabel?.textColor = .ypGray
         }
         
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = .ypLightGrey
+        cell.backgroundColor = .ypLightGray
         return cell
     }
     
@@ -51,14 +50,8 @@ extension HabitViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         if indexPath.row == 1 {
-//            let controller = HabitScheduleViewController()
-//            controller.delegate = self
-//            self.present(controller, animated: true, completion: nil)
-        }
-        else {
-            let controller = ChoosingCategoryViewController()
-            //controller.delegate = self
-            self.present(controller, animated: true, completion: nil)
+            let controller = ScheduleViewController()
+            present(controller, animated: true, completion: nil)
         }
     }
     

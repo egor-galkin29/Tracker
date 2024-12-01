@@ -1,9 +1,17 @@
 import UIKit
 
+protocol TrackerCellDelegate: AnyObject {
+    func completeTracker(_ trackerCell: CollectionViewCell, id: UUID, trackerDone: Bool)
+}
+
 final class CollectionViewCell: UICollectionViewCell {
+    static let identifier = "trackerCell"
+    
+    weak var delegate: TrackerCellDelegate?
+
     private var cellView: UIView = {
         let view = UIView()
-        //view.backgroundColor = .orange
+        view.backgroundColor = .green
         view.layer.cornerRadius = 16
         view.clipsToBounds = true
         return view
@@ -11,7 +19,6 @@ final class CollectionViewCell: UICollectionViewCell {
     
     private let emojiLable: UILabel = {
         let label = UILabel()
-       // label.text = "😳"
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.layer.cornerRadius = 12
         label.layer.masksToBounds = true
@@ -22,7 +29,6 @@ final class CollectionViewCell: UICollectionViewCell {
     
     private let descriptionLable: UILabel = {
         let label = UILabel()
-        //label.text = "выебать мишин рот два раза"
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .white
         label.lineBreakMode = .byWordWrapping
@@ -30,10 +36,10 @@ final class CollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private let doneButton: UIButton = {
+    let doneButton: UIButton = {
         let button = UIButton()
         let buttonImageNormal = UIImage(systemName: "plus")
-        //button.backgroundColor = .green
+        button.backgroundColor = .green
         button.layer.cornerRadius = 17
         button.setImage(buttonImageNormal, for: .normal)
         button.tintColor = .white
@@ -43,16 +49,16 @@ final class CollectionViewCell: UICollectionViewCell {
     
     let daysCountLable: UILabel = {
         let label = UILabel()
-        label.text = "1 день"
         label.font = .systemFont(ofSize: 12, weight: .medium)
         return label
     }()
     
-    private var trackerDone: Bool = false
+    var trackerDone: Bool = false
     private var trackerID: UUID?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         descriptionLable.preferredMaxLayoutWidth = cellView.bounds.width
         
         setupUI()
@@ -69,13 +75,11 @@ final class CollectionViewCell: UICollectionViewCell {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        cellView.addSubview(emojiLable)
-        emojiLable.translatesAutoresizingMaskIntoConstraints = false
-        
-        cellView.addSubview(descriptionLable)
-        descriptionLable.translatesAutoresizingMaskIntoConstraints = false
+        [emojiLable, descriptionLable].forEach {
+            cellView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
 
-        
         NSLayoutConstraint.activate([
             cellView.topAnchor.constraint(equalTo: contentView.topAnchor),
             cellView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -107,21 +111,36 @@ final class CollectionViewCell: UICollectionViewCell {
         let imageName = trackerDone ? "checkmark" : "plus"
         doneButton.setImage(UIImage(systemName: imageName), for: .normal)
         doneButton.alpha = trackerDone ? 0.3 : 1.0
-//        if let id = trackerID {
-//            delegate?.completeTracker(self, id: id, trackerDone: trackerDone)
-//            print("НОМЕР ТРЕКЕРА \(id)")
-//        }
+        if let id = trackerID {
+            delegate?.completeTracker(self, id: id, trackerDone: trackerDone)
+            print("НОМЕР ТРЕКЕРА \(id)")
+        }
     }
     
-    func configure(with tracker: Tracker/*, completedCount: Int, isCompletedToday: Bool*/) {
+    func configure(with tracker: Tracker, completedCount: Int, isCompletedToday: Bool) {
         emojiLable.text = tracker.emoji
         descriptionLable.text = tracker.title
         cellView.backgroundColor = tracker.color
         doneButton.backgroundColor = tracker.color
         trackerID = tracker.id
-        //daysCountLable.text = daysText(for: completedCount)
+        daysCountLable.text = daysText(for: completedCount)
         let imageName = trackerDone ? "checkmark" : "plus"
         doneButton.setImage(UIImage(systemName: imageName), for: .normal)
         doneButton.alpha = trackerDone ? 0.3 : 1.0
+    }
+    
+    private func daysText(for count: Int) -> String {
+        let lastDigit = count % 10
+        let lastTwoDigits = count % 100
+        
+        if lastTwoDigits >= 11 && lastTwoDigits <= 19 {
+            return "\(count) дней"
+        } else if lastDigit == 1 {
+            return "\(count) день"
+        } else if lastDigit >= 2 && lastDigit <= 4 {
+            return "\(count) дня"
+        } else {
+            return "\(count) дней"
+        }
     }
 }

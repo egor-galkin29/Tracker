@@ -1,12 +1,18 @@
 import UIKit
 
+protocol AddNewTrackerViewControllerDelegate: AnyObject {
+    func addTracker(tracker: Tracker, selectedCategory: String)
+}
+
 final class HabitViewController: UIViewController {
     
     var selectedCategory: String?
     var selectedSchedule: String?
     var schedule: [WeekDays] = []
-    private var optionsTableViewTopConstraint: NSLayoutConstraint!
+    private var habbitTableViewTopConstraint: NSLayoutConstraint!
     
+    weak var delegate: AddNewTrackerViewControllerDelegate?
+
     private lazy var viewControllerName: UILabel = {
         let label = UILabel()
         label.text = "Новая привычка"
@@ -59,9 +65,13 @@ final class HabitViewController: UIViewController {
         tableView.isScrollEnabled = false
         tableView.layer.cornerRadius = 16
         tableView.layer.masksToBounds = true
-        tableView.backgroundColor = .clear
-        tableView.separatorInset = .zero
-        tableView.separatorColor = .lightGray
+        tableView.backgroundColor = .ypLightGray
+        tableView.separatorStyle = .singleLine
+        tableView.separatorColor = .ypGray
+        tableView.separatorInset.left = 16
+        tableView.separatorInset.right = 16
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Properties cell")
         return tableView
     }()
     
@@ -94,13 +104,10 @@ final class HabitViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        habbitTableView.dataSource = self
-        habbitTableView.delegate = self
-        habbitTableView.register(UITableViewCell.self, forCellReuseIdentifier: "optionCell")
-        habbitTableView.tableFooterView = UIView()
-        print("Привет")
-        
+        selectedCategory = "Важное"
         setupViews()
+        
+        print("пидорас работай")
     }
     
     /// Привязка элементов к экрану
@@ -111,15 +118,21 @@ final class HabitViewController: UIViewController {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
+        habbitTableView.dataSource = self
+        habbitTableView.delegate = self
+        
         scrollView.addSubview(contentView)
         
         buttonContainerView.addSubview(trackerCreateButton)
         buttonContainerView.addSubview(trackerDismissButton)
         
+        trackerCreateButton.translatesAutoresizingMaskIntoConstraints = false
+        trackerDismissButton.translatesAutoresizingMaskIntoConstraints = false
+        
         view.backgroundColor = .white
         
-        optionsTableViewTopConstraint = habbitTableView.topAnchor.constraint(equalTo: habbitNameTextField.bottomAnchor, constant: 24)
-        optionsTableViewTopConstraint.isActive = true
+        habbitTableViewTopConstraint = habbitTableView.topAnchor.constraint(equalTo: habbitNameTextField.bottomAnchor, constant: 24)
+        habbitTableViewTopConstraint.isActive = true
         
         
         // Констрейнты для фиксированных элементов
@@ -137,7 +150,7 @@ final class HabitViewController: UIViewController {
             warningLable.heightAnchor.constraint(equalToConstant: 22),
             
             // Устанавливаем констрейнт с сохранением ссылки
-            optionsTableViewTopConstraint,
+            habbitTableViewTopConstraint,
             habbitTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             habbitTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             habbitTableView.heightAnchor.constraint(equalToConstant: 150)
@@ -183,32 +196,24 @@ final class HabitViewController: UIViewController {
     }
     
     @objc private func didTapCancelButton() {
-        //self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
     
     @objc private func didTapCreateButton() {
-        //            guard let name = habbitName.text else { return }
-        //            guard !name.isEmpty else { return }
-        //            guard let color = selectedColor else { return }
-        //            guard let emoji = selectedEmoji else { return }
-        //            guard let category = selectedCategory else { return }
-        //
-        //            let newTracker = Tracker(id: UUID(), trackerName: name, trackerColor: color, trackerEmoji: emoji, trackerShedule: schedule)
-        //            delegate?.addTracker(tracker: newTracker, selectedCategory: category )
-        //            print("СОЗДАН ТРЕКЕР С НОМЕРОМ \(newTracker.id), ИМЕНЕМ \(name), ЦВЕТОМ \(color), ЭМОДЗИ \(emoji), ДНЯМИ НЕДЕЛИ \(newTracker.trackerShedule)")
-        //
-        //            self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+        guard let name = habbitNameTextField.text, let category = selectedCategory, !name.isEmpty else { return }
+        
+        let newTracker = Tracker(id: UUID(), title: name, color: .red, emoji: "🌺", schedule: schedule)
+        delegate?.addTracker(tracker: newTracker, selectedCategory: category )
+        
+        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
     
     private func blockButtons() {
         guard let trackerName = habbitNameTextField.text else { return }
         
-        if trackerName.isEmpty == false &&
-            selectedCategory != nil &&
-            selectedCategory != "" &&
-            selectedSchedule != nil &&
-            selectedSchedule != "" &&
-            trackerName.count < 38 {
+        if trackerName.isEmpty == false && selectedCategory != nil &&
+            selectedCategory != "" && selectedSchedule != nil &&
+            selectedSchedule != "" && trackerName.count < 38 {
             trackerCreateButton.isEnabled = true
             trackerCreateButton.backgroundColor = .black
         } else {

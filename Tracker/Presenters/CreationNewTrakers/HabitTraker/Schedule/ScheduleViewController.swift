@@ -31,12 +31,16 @@ final class ScheduleViewController: UIViewController {
     }()
     
     private lazy var doneButton: UIButton = {
-        let button = UIButton(type: .system)
+        let button = UIButton()
         button.setTitle("Готово", for: .normal)
-        button.backgroundColor = .black
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 12
+        button.backgroundColor = .black
+        button.accessibilityIdentifier = "createScheduleButton"
+        button.layer.cornerRadius = 16
+        button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(didTapDoneButton), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -48,13 +52,14 @@ final class ScheduleViewController: UIViewController {
         view.backgroundColor = .white
         
         setupView()
+        
+        scheduleTableView.delegate = self
+        scheduleTableView.dataSource = self
+        
         blockButton()
     }
     
     private func setupView() {
-        
-        scheduleTableView.delegate = self
-        scheduleTableView.dataSource = self        
         
         [scheduleTableView, doneButton, scheduleLabel].forEach {
             view.addSubview($0)
@@ -66,17 +71,17 @@ final class ScheduleViewController: UIViewController {
             scheduleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             scheduleLabel.heightAnchor.constraint(equalToConstant: 22),
             
+            doneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            doneButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            doneButton.heightAnchor.constraint(equalToConstant: 60),
+            
             scheduleTableView.topAnchor.constraint(equalTo: scheduleLabel.bottomAnchor, constant: 30),
             scheduleTableView.bottomAnchor.constraint(equalTo: doneButton.topAnchor, constant: -47),
             scheduleTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scheduleTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            
-            doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            doneButton.heightAnchor.constraint(equalToConstant: 60)
         ])
-        print("fghjkl;")
     }
     
     @objc private func didTapDoneButton() {
@@ -127,7 +132,6 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
         if sender.isOn {
             selectedDays.append(day)
             blockButton()
-            print(selectedDays)
         } else {
             selectedDays.removeAll { $0 == day }
             blockButton()

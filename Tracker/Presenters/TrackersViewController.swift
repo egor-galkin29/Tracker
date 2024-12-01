@@ -8,9 +8,13 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     private var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.minimumInteritemSpacing = 3
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 9
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .clear
+        collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: "trackerCell")
+        collectionView.register(TrackerCellSupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
     
@@ -37,11 +41,30 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         return label
     }()
     
+    private lazy var pickerDate: UIDatePicker = {
+        let datePicker = UIDatePicker()
+        datePicker.accessibilityIdentifier = "currentDatePicker"
+        datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .compact
+        datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        return datePicker
+    }()
+    
     // MARK: Public Properties
     
-    var categories: [TrackerCategory] = []
     var visibleTrackers: [Tracker] = []
-    var categoryName:[String] = []
+    var categories: [TrackerCategory] = []
+    
+    var completedTrackers: [TrackerRecord] = []
+    
+    var currentDate: Date? {
+        let selectedDate = pickerDate.date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy"
+        let formattedDate = dateFormatter.string(from: selectedDate)
+        return dateFormatter.date(from: formattedDate) ?? Date()
+    }
     
     // MARK: Private Properties
     
@@ -49,18 +72,41 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     private let searchBar = UISearchBar()
     
     private var trackers: [Tracker] = []
-    private var completedTrackers: [TrackerRecord] = []
-
+    private var categoryName: [String] = []
+    
+    private var visibleTrackersWithCategory: [TrackerCategory] = []
+    
+    private var completedTrackersID = Set<UUID>()
+    
+    // MARK: @objc
+    
+    @objc private func addHabbite() {
+        let controller = CreationNewTrakersViewController()
+        self.present(controller, animated: true, completion: nil)
+    }
+    
+    @objc func datePickerValueChanged(_ sender: UIDatePicker) {
+        let selectedDate = sender.date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy"
+        let formattedDate = dateFormatter.string(from: selectedDate)
+        currentTrackersView()
+    }
+    
     // MARK: Override Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
-        mokTrackers()
+        //mokTrackers()
         setupView()
         setUpNavigationBar()
         addAllConstraints()
         setupSearchBar()
+        
+        currentTrackersView()
+        print("пидорас работай")
+
     }
     
     // MARK: Public Methods
@@ -73,14 +119,10 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         trackers.append(mokTracker_2)
         trackers.append(mokTracker_3)
         
-        let category_1 = TrackerCategory(title: "Важное", trackers: [mokTracker_1, mokTracker_2])
-        let category_2 = TrackerCategory(title: "НеВажное", trackers: [mokTracker_3])
+        let category_1 = TrackerCategory(title: "Важное", trackers: [mokTracker_1, mokTracker_2, mokTracker_3])
         categories.append(category_1)
-        categories.append(category_2)
         
         categoryName.append(category_1.title)
-        categoryName.append(category_2.title)
-
     }
     
     // MARK: Private Methods
@@ -97,9 +139,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         }
     }
     
-    //collection
     private func setupCollectionView() {
-        // Настройка коллекции
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: "cell")
@@ -124,44 +164,8 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     }
     
     private func setupNavRightDateButton() {
-        let datePicker = UIDatePicker()
-        datePicker.preferredDatePickerStyle = .compact
-        datePicker.datePickerMode = .date
-        datePicker.sizeToFit()
-        
-        datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
-        
-        let datePickerBarItem = UIBarButtonItem(customView: datePicker)
-        
-        navigationItem.rightBarButtonItem = datePickerBarItem
-    }
-    
-    @objc
-    private func addHabbite() {
-        let controller = CreationNewTrakersViewController()
-        self.present(controller, animated: true, completion: nil)
-    }
-    
-//    @objc
-//    private func addHabbite() {
-//        let newTracker = visibleTrackers.count
-//        
-//        visibleTrackers.append(trackers[newTracker])
-//        collectionView.performBatchUpdates {
-//            collectionView.insertItems(at: [IndexPath(item: newTracker, section: 0)])
-//        }
-//        
-//        //временно сдесь
-//        placeholderVisible()
-//    }
-
-    
-    @objc func datePickerValueChanged(_ sender: UIDatePicker) {
-        let selectedDate = sender.date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy"
-        let formattedDate = dateFormatter.string(from: selectedDate)
-        print("Выбранная дата: \(formattedDate)")
+        let naviBarRightButton = UIBarButtonItem(customView: pickerDate)
+        self.navigationItem.rightBarButtonItem = naviBarRightButton
     }
     
     //add view
@@ -203,6 +207,30 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             searchContainer.heightAnchor.constraint(equalToConstant: 44),
         ])
     }
+    
+    private func currentTrackersView() {
+        let currentDate = pickerDate.date
+        let calendar = Calendar.current
+        var currentWeekDay = calendar.component(.weekday, from: currentDate)
+        currentWeekDay = (currentWeekDay + 5) % 7
+        
+        visibleTrackers = []
+        
+        for category in categories {
+            for onetracker in category.trackers where (onetracker.schedule.contains(WeekDays.allCases[currentWeekDay]))  {
+                visibleTrackers.append(onetracker)
+            }
+        }
+        
+        visibleTrackers = Array(visibleTrackers.reduce(into: [UUID: Tracker]()) { $0[$1.id] = $1 }.values)
+        for tracker in visibleTrackers {
+            print(tracker.title)
+        }
+        
+        print(visibleTrackers.count)
+        collectionView.reloadData()
+        placeholderVisible()
+    }
 }
 
 extension TrackersViewController {
@@ -222,5 +250,42 @@ extension TrackersViewController {
             searchBar.trailingAnchor.constraint(equalTo: searchContainer.trailingAnchor),
             searchBar.bottomAnchor.constraint(equalTo: searchContainer.bottomAnchor)
         ])
+    }
+}
+
+extension TrackersViewController: TrackerCellDelegate {
+    func completeTracker(_ trackerCell: CollectionViewCell, id: UUID, trackerDone: Bool) {
+        let calendar = Calendar.current
+        
+        if trackerDone {
+            completedTrackersID.insert(id)
+            let trackerRecord = TrackerRecord(trackerID: id, date: pickerDate.date)
+            completedTrackers.append(trackerRecord)
+            collectionView.reloadData()
+            if !completedTrackers.contains(where: { $0.trackerID == id && calendar.isDate($0.date, inSameDayAs: currentDate ?? Date()) }) {
+                completedTrackers.append(trackerRecord)
+            }
+            print(completedTrackersID)
+        } else {
+            completedTrackersID.remove(id)
+            if let index = completedTrackers.firstIndex(where: { $0.trackerID == id && calendar.isDate($0.date, inSameDayAs: currentDate ?? Date()) }) {
+                completedTrackers.remove(at: index)
+                print(completedTrackersID)
+            }
+            collectionView.reloadData()
+        }
+    }
+}
+
+extension TrackersViewController: AddNewTrackerViewControllerDelegate {
+    func addTracker(tracker: Tracker, selectedCategory: String) {
+        trackers.append(tracker)
+        
+        let newCategory = TrackerCategory(title: selectedCategory, trackers: trackers)
+        self.categories = [newCategory]
+        
+        collectionView.reloadData()
+        currentTrackersView()
+        placeholderVisible()
     }
 }

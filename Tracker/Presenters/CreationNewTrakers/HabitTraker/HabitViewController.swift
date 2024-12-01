@@ -106,8 +106,6 @@ final class HabitViewController: UIViewController {
         super.viewDidLoad()
         selectedCategory = "Важное"
         setupViews()
-        
-        print("пидорас работай")
     }
     
     /// Привязка элементов к экрану

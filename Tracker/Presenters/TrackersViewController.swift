@@ -105,7 +105,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         setupSearchBar()
         
         currentTrackersView()
-        print("пидорас работай")
 
     }
     
@@ -227,7 +226,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             print(tracker.title)
         }
         
-        print(visibleTrackers.count)
         collectionView.reloadData()
         placeholderVisible()
     }
@@ -289,3 +287,4 @@ extension TrackersViewController: AddNewTrackerViewControllerDelegate {
         placeholderVisible()
     }
 }
+

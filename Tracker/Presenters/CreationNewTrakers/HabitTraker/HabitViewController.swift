@@ -1,18 +1,13 @@
 import UIKit
 
-protocol AddNewTrackerViewControllerDelegate: AnyObject {
-    func addTracker(tracker: Tracker, selectedCategory: String)
-}
-
 final class HabitViewController: UIViewController {
     
     var selectedCategory: String?
     var selectedSchedule: String?
     var schedule: [WeekDays] = []
+    
     private var habbitTableViewTopConstraint: NSLayoutConstraint!
     
-    weak var delegate: AddNewTrackerViewControllerDelegate?
-
     private lazy var viewControllerName: UILabel = {
         let label = UILabel()
         label.text = "Новая привычка"
@@ -86,7 +81,6 @@ final class HabitViewController: UIViewController {
         return button
     }()
     
-    // Кнопка создания трекера
     private lazy var trackerCreateButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Создать", for: .normal)
@@ -108,7 +102,6 @@ final class HabitViewController: UIViewController {
         setupViews()
     }
     
-    /// Привязка элементов к экрану
     private func setupViews() {
         
         [viewControllerName, scrollView, habbitNameTextField, warningLable, habbitTableView, buttonContainerView].forEach {
@@ -132,8 +125,6 @@ final class HabitViewController: UIViewController {
         habbitTableViewTopConstraint = habbitTableView.topAnchor.constraint(equalTo: habbitNameTextField.bottomAnchor, constant: 24)
         habbitTableViewTopConstraint.isActive = true
         
-        
-        // Констрейнты для фиксированных элементов
         NSLayoutConstraint.activate([
             viewControllerName.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             viewControllerName.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -147,7 +138,6 @@ final class HabitViewController: UIViewController {
             warningLable.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             warningLable.heightAnchor.constraint(equalToConstant: 22),
             
-            // Устанавливаем констрейнт с сохранением ссылки
             habbitTableViewTopConstraint,
             habbitTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             habbitTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -168,7 +158,7 @@ final class HabitViewController: UIViewController {
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor) // Обеспечиваем горизонтальный скроллинг
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
         
         NSLayoutConstraint.activate([
@@ -201,7 +191,7 @@ final class HabitViewController: UIViewController {
         guard let name = habbitNameTextField.text, let category = selectedCategory, !name.isEmpty else { return }
         
         let newTracker = Tracker(id: UUID(), title: name, color: .red, emoji: "🌺", schedule: schedule)
-        delegate?.addTracker(tracker: newTracker, selectedCategory: category )
+        NotificationCenter.default.post(name: .didCreateNewTracker, object: nil, userInfo: ["first": newTracker, "second": category])
         
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }

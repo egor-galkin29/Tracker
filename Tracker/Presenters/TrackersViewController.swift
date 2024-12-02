@@ -74,8 +74,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     private var trackers: [Tracker] = []
     private var categoryName: [String] = []
     
-    private var visibleTrackersWithCategory: [TrackerCategory] = []
-    
     private var completedTrackersID = Set<UUID>()
     
     // MARK: @objc
@@ -93,19 +91,39 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         currentTrackersView()
     }
     
+    @objc private func didReceiveNewTrackerNotification(_ notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+        
+        if let newTracker = userInfo["first"] as? Tracker,
+           let selectedCategoryString = userInfo["second"] as? String? {
+            trackers.append(newTracker)
+            guard let selectedCategory = selectedCategoryString else { return }
+            let newCategory = TrackerCategory(title: selectedCategory, trackers: trackers)
+            self.categories = [newCategory]
+        } else {
+            print("Ошибка добавления трекера")
+        }
+        
+        collectionView.reloadData()
+        currentTrackersView()
+        placeholderVisible()
+    }
     // MARK: Override Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mokTrackers()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveNewTrackerNotification(_:)), name: .didCreateNewTracker, object: nil)
+        
+        
         setupCollectionView()
-        //mokTrackers()
         setupView()
         setUpNavigationBar()
         addAllConstraints()
         setupSearchBar()
         
         currentTrackersView()
-
     }
     
     // MARK: Public Methods
@@ -114,9 +132,10 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         let mokTracker_1 = Tracker(id: UUID(), title: "MOK Tracker_1", color: .red, emoji: "😻", schedule: [.wednesday, .saturday])
         let mokTracker_2 = Tracker(id: UUID(), title: "MOK Tracker_2", color: .green, emoji: "😻", schedule: [.wednesday, .friday])
         let mokTracker_3 = Tracker(id: UUID(), title: "MOK Tracker_3", color: .orange, emoji: "😻", schedule: [.saturday])
-        trackers.append(mokTracker_1)
-        trackers.append(mokTracker_2)
-        trackers.append(mokTracker_3)
+        [mokTracker_1, mokTracker_2, mokTracker_3].forEach {
+            trackers.append($0)
+            visibleTrackers.append($0)
+        }
         
         let category_1 = TrackerCategory(title: "Важное", trackers: [mokTracker_1, mokTracker_2, mokTracker_3])
         categories.append(category_1)
@@ -275,16 +294,7 @@ extension TrackersViewController: TrackerCellDelegate {
     }
 }
 
-extension TrackersViewController: AddNewTrackerViewControllerDelegate {
-    func addTracker(tracker: Tracker, selectedCategory: String) {
-        trackers.append(tracker)
-        
-        let newCategory = TrackerCategory(title: selectedCategory, trackers: trackers)
-        self.categories = [newCategory]
-        
-        collectionView.reloadData()
-        currentTrackersView()
-        placeholderVisible()
-    }
+extension Notification.Name {
+    static let didCreateNewTracker = Notification.Name("didCreateNewTracker")
 }
 

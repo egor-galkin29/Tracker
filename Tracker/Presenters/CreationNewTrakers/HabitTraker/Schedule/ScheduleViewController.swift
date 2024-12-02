@@ -85,20 +85,19 @@ final class ScheduleViewController: UIViewController {
     }
     
     @objc private func didTapDoneButton() {
-                delegate?.didSelectSchedule(schedule: selectedDays)
-                print("ЗАДАНЫ СДЕЛУЮЩИЕ ДНИ НЕДЕЛИ ДЛЯ ТРЕКЕРА: \(selectedDays)")
-                dismiss(animated: true, completion: nil)
+        delegate?.didSelectSchedule(schedule: selectedDays)
+        dismiss(animated: true, completion: nil)
+    }
+    
+    private func blockButton() {
+        if selectedDays.isEmpty {
+            doneButton.isEnabled = false
+            doneButton.backgroundColor = .ypGray
+        } else {
+            doneButton.isEnabled = true
+            doneButton.backgroundColor = .black
         }
-        
-        private func blockButton() {
-            if selectedDays.isEmpty {
-                doneButton.isEnabled = false
-                doneButton.backgroundColor = .ypGray
-            } else {
-                doneButton.isEnabled = true
-                doneButton.backgroundColor = .black
-            }
-        }
+    }
 }
 
 extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {

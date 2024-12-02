@@ -8,7 +8,7 @@ final class CollectionViewCell: UICollectionViewCell {
     static let identifier = "trackerCell"
     
     weak var delegate: TrackerCellDelegate?
-
+    
     private var cellView: UIView = {
         let view = UIView()
         view.backgroundColor = .green
@@ -79,7 +79,7 @@ final class CollectionViewCell: UICollectionViewCell {
             cellView.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
-
+        
         NSLayoutConstraint.activate([
             cellView.topAnchor.constraint(equalTo: contentView.topAnchor),
             cellView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),

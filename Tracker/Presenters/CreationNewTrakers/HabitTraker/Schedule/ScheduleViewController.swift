@@ -12,7 +12,7 @@ final class ScheduleViewController: UIViewController {
         tableView.layer.cornerRadius = 16
         tableView.layer.masksToBounds = true
         tableView.separatorStyle = .singleLine
-        tableView.separatorColor = .ypLightGray
+        tableView.separatorColor = .ypGray
         tableView.separatorInset.left = 16
         tableView.separatorInset.right = 16
         tableView.contentInset.top = -35

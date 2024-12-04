@@ -22,7 +22,7 @@ final class CreationNewTrakersViewController: UIViewController {
         return button
     }()
     
-    private lazy var unregularButton: UIButton = {
+    private lazy var irregularButton: UIButton = {
         let button = UIButton()
         button.setTitle("Нерегулярное событие", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -31,6 +31,7 @@ final class CreationNewTrakersViewController: UIViewController {
         button.accessibilityIdentifier = "unregularButton"
         button.layer.cornerRadius = 16
         button.tag = 2
+        button.addTarget(self, action: #selector(irregularButtonPressed), for: .touchUpInside)
         return button
     }()
     
@@ -42,7 +43,7 @@ final class CreationNewTrakersViewController: UIViewController {
     private func setupViews() {
         [viewControllerName,
          habitButton,
-         unregularButton].forEach {
+         irregularButton].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -58,10 +59,10 @@ final class CreationNewTrakersViewController: UIViewController {
             habitButton.widthAnchor.constraint(equalToConstant: 335),
             habitButton.heightAnchor.constraint(equalToConstant: 60),
             
-            unregularButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            unregularButton.topAnchor.constraint(equalTo: habitButton.bottomAnchor, constant:16),
-            unregularButton.widthAnchor.constraint(equalToConstant: 335),
-            unregularButton.heightAnchor.constraint(equalToConstant: 60)
+            irregularButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            irregularButton.topAnchor.constraint(equalTo: habitButton.bottomAnchor, constant:16),
+            irregularButton.widthAnchor.constraint(equalToConstant: 335),
+            irregularButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
     
@@ -71,5 +72,9 @@ final class CreationNewTrakersViewController: UIViewController {
         self.present(controller, animated: true, completion: nil)
     }
     
-    @objc private func unregularButtonPressed() {}
+    @objc private func irregularButtonPressed() {
+        let controller = IrregularEventsViewController()
+        
+        self.present(controller, animated: true, completion: nil)
+    }
 }

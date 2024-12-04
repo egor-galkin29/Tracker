@@ -1,16 +1,14 @@
 import UIKit
 
-final class HabitViewController: UIViewController {
+final class IrregularEventsViewController: UIViewController {
     
     var selectedCategory: String?
-    var selectedSchedule: String?
-    var schedule: [WeekDays] = []
     
-    private var habbitTableViewTopConstraint: NSLayoutConstraint!
+    private var irregularTableViewTopConstraint: NSLayoutConstraint!
     
     private lazy var viewControllerName: UILabel = {
         let label = UILabel()
-        label.text = "Новая привычка"
+        label.text = "Новое нерегулярное событие"
         label.font = .systemFont(ofSize: 16)
         label.tintColor = .black
         return label
@@ -26,7 +24,7 @@ final class HabitViewController: UIViewController {
         return view
     }()
     
-    lazy var habbitNameTextField: UITextField = {
+    lazy var irregularNameTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Введите название трекера"
         textField.font = .systemFont(ofSize: 17, weight: .regular)
@@ -55,18 +53,15 @@ final class HabitViewController: UIViewController {
         return lable
     }()
     
-    private lazy var habbitTableView: UITableView = {
+    private lazy var irregularTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.isScrollEnabled = false
         tableView.layer.cornerRadius = 16
         tableView.layer.masksToBounds = true
+        tableView.separatorColor = .clear
         tableView.backgroundColor = .ypLightGray
-        tableView.separatorStyle = .singleLine
-        tableView.separatorColor = .ypGray
-        tableView.separatorInset.left = 16
-        tableView.separatorInset.right = 16
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Properties cell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "irregular cell")
         return tableView
     }()
     
@@ -104,19 +99,19 @@ final class HabitViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = false
         self.view.addGestureRecognizer(tapGesture)
-        habbitNameTextField.delegate = self
+        irregularNameTextField.delegate = self
 
     }
     
     private func setupViews() {
         
-        [viewControllerName, scrollView, habbitNameTextField, warningLable, habbitTableView, buttonContainerView].forEach {
+        [viewControllerName, scrollView, irregularNameTextField, warningLable, irregularTableView, buttonContainerView].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        habbitTableView.dataSource = self
-        habbitTableView.delegate = self
+        irregularTableView.dataSource = self
+        irregularTableView.delegate = self
         
         scrollView.addSubview(contentView)
         
@@ -128,31 +123,31 @@ final class HabitViewController: UIViewController {
         
         view.backgroundColor = .white
         
-        habbitTableViewTopConstraint = habbitTableView.topAnchor.constraint(equalTo: habbitNameTextField.bottomAnchor, constant: 24)
-        habbitTableViewTopConstraint.isActive = true
+        irregularTableViewTopConstraint = irregularTableView.topAnchor.constraint(equalTo: irregularNameTextField.bottomAnchor, constant: 24)
+        irregularTableViewTopConstraint.isActive = true
         
         NSLayoutConstraint.activate([
             viewControllerName.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             viewControllerName.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            habbitNameTextField.topAnchor.constraint(equalTo: viewControllerName.bottomAnchor, constant: 24),
-            habbitNameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            habbitNameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            habbitNameTextField.heightAnchor.constraint(equalToConstant: 75),
+            irregularNameTextField.topAnchor.constraint(equalTo: viewControllerName.bottomAnchor, constant: 24),
+            irregularNameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            irregularNameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            irregularNameTextField.heightAnchor.constraint(equalToConstant: 75),
             
-            warningLable.topAnchor.constraint(equalTo: habbitNameTextField.bottomAnchor, constant: 8),
+            warningLable.topAnchor.constraint(equalTo: irregularNameTextField.bottomAnchor, constant: 8),
             warningLable.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             warningLable.heightAnchor.constraint(equalToConstant: 22),
             
-            habbitTableViewTopConstraint,
-            habbitTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            habbitTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            habbitTableView.heightAnchor.constraint(equalToConstant: 150)
+            irregularTableViewTopConstraint,
+            irregularTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            irregularTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            irregularTableView.heightAnchor.constraint(equalToConstant: 75)
         ])
         
         // Констрейнты для scrollView
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: habbitTableView.bottomAnchor, constant: 32),
+            scrollView.topAnchor.constraint(equalTo: irregularTableView.bottomAnchor, constant: 32),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: buttonContainerView.topAnchor)
@@ -194,12 +189,12 @@ final class HabitViewController: UIViewController {
     }
     
     @objc private func didTapCreateButton() {
-        guard let name = habbitNameTextField.text, let category = selectedCategory, !name.isEmpty else { return }
-        
-        let newTracker = Tracker(id: UUID(), title: name, color: .red, emoji: "🌺", schedule: schedule)
-        NotificationCenter.default.post(name: .didCreateNewTracker, object: nil, userInfo: ["first": newTracker, "second": category])
-        
-        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+        let alert = UIAlertController(title: "Внимание!",
+                                      message: "Данная функция доступна \nв платной версии",
+                                      preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default)
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
     }
     
     @objc private func hideKeyboard() {
@@ -207,11 +202,10 @@ final class HabitViewController: UIViewController {
     }
     
     private func blockButtons() {
-        guard let trackerName = habbitNameTextField.text else { return }
+        guard let trackerName = irregularNameTextField.text else { return }
         
         if trackerName.isEmpty == false && selectedCategory != nil &&
-            selectedCategory != "" && selectedSchedule != nil &&
-            selectedSchedule != "" && trackerName.count < 38 {
+            selectedCategory != "" && trackerName.count < 38 {
             trackerCreateButton.isEnabled = true
             trackerCreateButton.backgroundColor = .black
         } else {
@@ -227,25 +221,10 @@ final class HabitViewController: UIViewController {
     }
 }
 
-extension HabitViewController: ScheduleViewControllerDelegate {
-    func didSelectSchedule(schedule: [WeekDays]) {
-        self.schedule = schedule
-        selectedSchedule = shortDaysText(days: schedule)
-        blockButtons()
-        habbitTableView.reloadData()
-    }
-    
-    func shortDaysText(days: [WeekDays]) -> String {
-        let shortDays = days.map {$0.shortDaysName}
-        let shortDaysText = shortDays.joined(separator: ", ")
-        return shortDaysText
-    }
-}
-
-extension HabitViewController: UITextFieldDelegate {
+extension IrregularEventsViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
-
 }
+

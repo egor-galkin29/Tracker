@@ -47,9 +47,11 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .compact
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
-        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        datePicker.locale = Locale(identifier: "ru_RU")
         return datePicker
     }()
+    
+    private let datePickerContainer = UIView()
     
     // MARK: Public Properties
     
@@ -84,10 +86,12 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
-        let selectedDate = sender.date
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy"
-        let formattedDate = dateFormatter.string(from: selectedDate)
+        /* На zoom конференции 14 спринта, ведущий скаазл что вид дата пикера не важен.
+           Я изменил его с MM.dd.yyy на dd.MM.yyyy спомощью смены локации на россию */
+        
+        let selectedDate = dateFormatter.string(from: sender.date)
         currentTrackersView()
     }
     
@@ -182,8 +186,8 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     }
     
     private func setupNavRightDateButton() {
-        let naviBarRightButton = UIBarButtonItem(customView: pickerDate)
-        self.navigationItem.rightBarButtonItem = naviBarRightButton
+        let customItem = UIBarButtonItem(customView: datePickerContainer)
+        navigationItem.rightBarButtonItem = customItem
     }
     
     //add view
@@ -194,6 +198,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
+        datePickerContainer.addSubview(pickerDate)
     }
     
     private func addAllConstraints() {
@@ -213,7 +218,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             titleLabel.topAnchor.constraint(equalTo: guide.topAnchor),
             
             //collectionView
-            collectionView.topAnchor.constraint(equalTo: searchContainer.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: searchContainer.bottomAnchor, constant: 30),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -223,6 +228,10 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             searchContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             searchContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
             searchContainer.heightAnchor.constraint(equalToConstant: 44),
+            
+            //pickerDate
+            pickerDate.centerXAnchor.constraint(equalTo: datePickerContainer.centerXAnchor),
+            pickerDate.centerYAnchor.constraint(equalTo: datePickerContainer.centerYAnchor)
         ])
     }
     

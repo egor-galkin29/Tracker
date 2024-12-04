@@ -50,7 +50,7 @@ extension HabitViewController: UITableViewDataSource, UITableViewDelegate {
             self.present(controller, animated: true, completion: nil)
         }
         else {
-            //            let controller = HabitCategoryViewController()
+            //            let controller = CategoryViewController()
             //            controller.delegate = self
             //            self.present(controller, animated: true, completion: nil)
         }

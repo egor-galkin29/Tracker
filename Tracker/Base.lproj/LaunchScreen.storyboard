@@ -16,8 +16,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Image" translatesAutoresizingMaskIntoConstraints="NO" id="UxK-27-9dF">
-                                <rect key="frame" x="159" y="399.66666666666669" width="75" height="78"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch_screen_image" translatesAutoresizingMaskIntoConstraints="NO" id="UxK-27-9dF">
+                                <rect key="frame" x="151" y="391.66666666666669" width="91" height="94"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="94" id="hr8-hH-miS"/>
+                                    <constraint firstAttribute="width" constant="91" id="nTr-XF-gJf"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -34,7 +38,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Image" width="75" height="78"/>
+        <image name="launch_screen_image" width="75" height="78"/>
         <systemColor name="tableCellBlueTextColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

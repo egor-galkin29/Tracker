@@ -88,8 +88,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy"
-        /* На zoom конференции 14 спринта, ведущий скаазл что вид дата пикера не важен.
-           Я изменил его с MM.dd.yyy на dd.MM.yyyy спомощью смены локации на россию */
         
         let selectedDate = dateFormatter.string(from: sender.date)
         currentTrackersView()

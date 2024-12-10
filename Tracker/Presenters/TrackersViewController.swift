@@ -57,8 +57,9 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     var visibleTrackers: [Tracker] = []
     var categories: [TrackerCategory] = []
-    
-    var completedTrackers: [TrackerRecord] = []
+        
+    let trackerStore = TrackerStore.shared
+    let trackerRecordStore = TrackerRecordStore.shared
     
     var currentDate: Date? {
         let selectedDate = pickerDate.date
@@ -124,6 +125,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         setUpNavigationBar()
         addAllConstraints()
         setupSearchBar()
+        trackerStore.importCoreDataTracker()
         
         currentTrackersView()
     }
@@ -239,19 +241,24 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         var currentWeekDay = calendar.component(.weekday, from: currentDate)
         currentWeekDay = (currentWeekDay + 5) % 7
         
+        let trackersFromCoreData = trackerStore.importCoreDataTracker()
+        let appTrackers = trackersFromCoreData.map { Tracker(from: $0)}
+        
         visibleTrackers = []
         
-        for category in categories {
-            for onetracker in category.trackers where (onetracker.schedule.contains(WeekDays.allCases[currentWeekDay]))  {
-                visibleTrackers.append(onetracker)
-            }
+//        for category in categories {
+//            for onetracker in category.trackers where (onetracker.schedule.contains(WeekDays.allCases[currentWeekDay]))  {
+//                visibleTrackers.append(onetracker)
+//            }
+//        }
+        
+        visibleTrackers = appTrackers.filter { tracker in
+            let trackerScheduleDays = tracker.schedule.contains(WeekDays.allCases[currentWeekDay])
+            return trackerScheduleDays
         }
         
         visibleTrackers = Array(visibleTrackers.reduce(into: [UUID: Tracker]()) { $0[$1.id] = $1 }.values)
-        for tracker in visibleTrackers {
-            print(tracker.title)
-        }
-        
+
         collectionView.reloadData()
         placeholderVisible()
     }
@@ -283,19 +290,11 @@ extension TrackersViewController: TrackerCellDelegate {
         
         if trackerDone {
             completedTrackersID.insert(id)
-            let trackerRecord = TrackerRecord(trackerID: id, date: pickerDate.date)
-            completedTrackers.append(trackerRecord)
+            trackerRecordStore.saveRecordToCoreData(id: id, trackerDate: currentDate ?? Date())
             collectionView.reloadData()
-            if !completedTrackers.contains(where: { $0.trackerID == id && calendar.isDate($0.date, inSameDayAs: currentDate ?? Date()) }) {
-                completedTrackers.append(trackerRecord)
-            }
-            print(completedTrackersID)
         } else {
             completedTrackersID.remove(id)
-            if let index = completedTrackers.firstIndex(where: { $0.trackerID == id && calendar.isDate($0.date, inSameDayAs: currentDate ?? Date()) }) {
-                completedTrackers.remove(at: index)
-                print(completedTrackersID)
-            }
+            trackerRecordStore.deleteRecordFromCoreData(id: id, trackerDate: currentDate ?? Date())
             collectionView.reloadData()
         }
     }

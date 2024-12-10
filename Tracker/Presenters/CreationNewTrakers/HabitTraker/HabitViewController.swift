@@ -8,6 +8,8 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
     var selectedColor: UIColor?
     var schedule: [WeekDays] = []
     
+    let trackerStore = TrackerStore.shared
+        
     let emojis = ["😊", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"]
     let colors: [UIColor] = [
         .colorSelection1, .colorSelection2, .colorSelection3, .colorSelection4, .colorSelection5, .colorSelection6, .colorSelection7, .colorSelection8, .colorSelection9, .colorSelection10, .colorSelection11, .colorSelection12, .colorSelection13, .colorSelection14, .colorSelection15, .colorSelection16, .colorSelection17, .colorSelection18
@@ -273,6 +275,7 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
         guard let name = habbitNameTextField.text, let category = selectedCategory, let color = selectedColor, let emoji = selectedEmoji, !name.isEmpty else { return }
         
         let newTracker = Tracker(id: UUID(), title: name, color: color, emoji: emoji, schedule: schedule)
+        trackerStore.saveTrackerToCoreData(id: UUID(), title: name, color: color, emoji: emoji, schedule: schedule)
         NotificationCenter.default.post(name: .didCreateNewTracker, object: nil, userInfo: ["first": newTracker, "second": category])
         
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)

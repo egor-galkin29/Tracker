@@ -8,6 +8,8 @@ final class CollectionViewCell: UICollectionViewCell {
     static let identifier = "trackerCell"
     
     weak var delegate: TrackerCellDelegate?
+    var currentDate: Date
+    let trackerRecordStore = TrackerRecordStore.shared
     
     private var cellView: UIView = {
         let view = UIView()
@@ -57,8 +59,8 @@ final class CollectionViewCell: UICollectionViewCell {
     private var trackerID: UUID?
     
     override init(frame: CGRect) {
+        self.currentDate = Date()
         super.init(frame: frame)
-        
         descriptionLable.preferredMaxLayoutWidth = cellView.bounds.width
         
         setupUI()
@@ -107,23 +109,34 @@ final class CollectionViewCell: UICollectionViewCell {
     }
     
     @objc func doneButtonPressed() {
+        guard let id = trackerID else { return }
         trackerDone = !trackerDone
         let imageName = trackerDone ? "checkmark" : "plus"
         doneButton.setImage(UIImage(systemName: imageName), for: .normal)
         doneButton.alpha = trackerDone ? 0.3 : 1.0
-        if let id = trackerID {
-            delegate?.completeTracker(self, id: id, trackerDone: trackerDone)
-            print("НОМЕР ТРЕКЕРА \(id)")
+//        if let id = trackerID {
+//            delegate?.completeTracker(self, id: id, trackerDone: trackerDone)
+//            print("НОМЕР ТРЕКЕРА \(id)")
+//        }
+        
+        if trackerDone {
+            trackerRecordStore.saveRecordToCoreData(id: id, trackerDate: currentDate)
+        } else {
+            trackerRecordStore.deleteRecordFromCoreData(id: id, trackerDate: currentDate)
         }
+        
+        let completedCountCoreData = trackerRecordStore.countCoreDataRecordComplete(id: id)
+        daysCountLable.text = daysText(for: completedCountCoreData)
     }
     
-    func configure(with tracker: Tracker, completedCount: Int, isCompletedToday: Bool) {
+    func configure(with tracker: Tracker, isCompletedToday: Bool) {
         emojiLable.text = tracker.emoji
         descriptionLable.text = tracker.title
         cellView.backgroundColor = tracker.color
         doneButton.backgroundColor = tracker.color
         trackerID = tracker.id
-        daysCountLable.text = daysText(for: completedCount)
+        let completedCountCoreData = trackerRecordStore.countCoreDataRecordComplete(id: tracker.id)
+        daysCountLable.text = daysText(for: completedCountCoreData)
         let imageName = trackerDone ? "checkmark" : "plus"
         doneButton.setImage(UIImage(systemName: imageName), for: .normal)
         doneButton.alpha = trackerDone ? 0.3 : 1.0

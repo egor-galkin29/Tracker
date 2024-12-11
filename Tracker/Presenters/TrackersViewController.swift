@@ -115,7 +115,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mokTrackers()
         
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveNewTrackerNotification(_:)), name: .didCreateNewTracker, object: nil)
         
@@ -132,20 +131,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: Public Methods
     
-    func mokTrackers() {
-        let mokTracker_1 = Tracker(id: UUID(), title: "MOK Tracker_1", color: .red, emoji: "😻", schedule: [.wednesday, .saturday])
-        let mokTracker_2 = Tracker(id: UUID(), title: "MOK Tracker_2", color: .green, emoji: "😻", schedule: [.wednesday, .friday])
-        let mokTracker_3 = Tracker(id: UUID(), title: "MOK Tracker_3", color: .orange, emoji: "😻", schedule: [.saturday])
-        [mokTracker_1, mokTracker_2, mokTracker_3].forEach {
-            trackers.append($0)
-            visibleTrackers.append($0)
-        }
-        
-        let category_1 = TrackerCategory(title: "Важное", trackers: [mokTracker_1, mokTracker_2, mokTracker_3])
-        categories.append(category_1)
-        
-        categoryName.append(category_1.title)
-    }
     
     // MARK: Private Methods
     
@@ -246,15 +231,10 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         
         visibleTrackers = []
         
-//        for category in categories {
-//            for onetracker in category.trackers where (onetracker.schedule.contains(WeekDays.allCases[currentWeekDay]))  {
-//                visibleTrackers.append(onetracker)
-//            }
-//        }
-        
-        visibleTrackers = appTrackers.filter { tracker in
-            let trackerScheduleDays = tracker.schedule.contains(WeekDays.allCases[currentWeekDay])
-            return trackerScheduleDays
+        for category in categories {
+            for onetracker in category.trackers where (onetracker.schedule.contains(WeekDays.allCases[currentWeekDay]))  {
+                visibleTrackers.append(onetracker)
+            }
         }
         
         visibleTrackers = Array(visibleTrackers.reduce(into: [UUID: Tracker]()) { $0[$1.id] = $1 }.values)

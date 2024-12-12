@@ -57,8 +57,9 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     var visibleTrackers: [Tracker] = []
     var categories: [TrackerCategory] = []
-    
-    var completedTrackers: [TrackerRecord] = []
+        
+    let trackerStore = TrackerStore.shared
+    let trackerRecordStore = TrackerRecordStore.shared
     
     var currentDate: Date? {
         let selectedDate = pickerDate.date
@@ -88,8 +89,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy"
-        /* На zoom конференции 14 спринта, ведущий скаазл что вид дата пикера не важен.
-           Я изменил его с MM.dd.yyy на dd.MM.yyyy спомощью смены локации на россию */
         
         let selectedDate = dateFormatter.string(from: sender.date)
         currentTrackersView()
@@ -116,7 +115,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mokTrackers()
         
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveNewTrackerNotification(_:)), name: .didCreateNewTracker, object: nil)
         
@@ -126,26 +124,13 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         setUpNavigationBar()
         addAllConstraints()
         setupSearchBar()
+        trackerStore.importCoreDataTracker()
         
         currentTrackersView()
     }
     
     // MARK: Public Methods
     
-    func mokTrackers() {
-        let mokTracker_1 = Tracker(id: UUID(), title: "MOK Tracker_1", color: .red, emoji: "😻", schedule: [.wednesday, .saturday])
-        let mokTracker_2 = Tracker(id: UUID(), title: "MOK Tracker_2", color: .green, emoji: "😻", schedule: [.wednesday, .friday])
-        let mokTracker_3 = Tracker(id: UUID(), title: "MOK Tracker_3", color: .orange, emoji: "😻", schedule: [.saturday])
-        [mokTracker_1, mokTracker_2, mokTracker_3].forEach {
-            trackers.append($0)
-            visibleTrackers.append($0)
-        }
-        
-        let category_1 = TrackerCategory(title: "Важное", trackers: [mokTracker_1, mokTracker_2, mokTracker_3])
-        categories.append(category_1)
-        
-        categoryName.append(category_1.title)
-    }
     
     // MARK: Private Methods
     
@@ -241,6 +226,9 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         var currentWeekDay = calendar.component(.weekday, from: currentDate)
         currentWeekDay = (currentWeekDay + 5) % 7
         
+        let trackersFromCoreData = trackerStore.importCoreDataTracker()
+        let appTrackers = trackersFromCoreData.map { Tracker(from: $0)}
+        
         visibleTrackers = []
         
         for category in categories {
@@ -250,10 +238,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         }
         
         visibleTrackers = Array(visibleTrackers.reduce(into: [UUID: Tracker]()) { $0[$1.id] = $1 }.values)
-        for tracker in visibleTrackers {
-            print(tracker.title)
-        }
-        
+
         collectionView.reloadData()
         placeholderVisible()
     }
@@ -285,19 +270,11 @@ extension TrackersViewController: TrackerCellDelegate {
         
         if trackerDone {
             completedTrackersID.insert(id)
-            let trackerRecord = TrackerRecord(trackerID: id, date: pickerDate.date)
-            completedTrackers.append(trackerRecord)
+            trackerRecordStore.saveRecordToCoreData(id: id, trackerDate: currentDate ?? Date())
             collectionView.reloadData()
-            if !completedTrackers.contains(where: { $0.trackerID == id && calendar.isDate($0.date, inSameDayAs: currentDate ?? Date()) }) {
-                completedTrackers.append(trackerRecord)
-            }
-            print(completedTrackersID)
         } else {
             completedTrackersID.remove(id)
-            if let index = completedTrackers.firstIndex(where: { $0.trackerID == id && calendar.isDate($0.date, inSameDayAs: currentDate ?? Date()) }) {
-                completedTrackers.remove(at: index)
-                print(completedTrackersID)
-            }
+            trackerRecordStore.deleteRecordFromCoreData(id: id, trackerDate: currentDate ?? Date())
             collectionView.reloadData()
         }
     }

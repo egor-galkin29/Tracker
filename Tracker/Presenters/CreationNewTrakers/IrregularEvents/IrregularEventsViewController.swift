@@ -3,6 +3,15 @@ import UIKit
 final class IrregularEventsViewController: UIViewController {
     
     var selectedCategory: String?
+    var selectedEmoji: String?
+    var selectedColor: UIColor?
+    let currentDate = Date?.self
+    let trackerStore = TrackerStore.shared
+    
+    let emojis = ["😊", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"]
+    let colors: [UIColor] = [
+        .colorSelection1, .colorSelection2, .colorSelection3, .colorSelection4, .colorSelection5, .colorSelection6, .colorSelection7, .colorSelection8, .colorSelection9, .colorSelection10, .colorSelection11, .colorSelection12, .colorSelection13, .colorSelection14, .colorSelection15, .colorSelection16, .colorSelection17, .colorSelection18
+    ]
     
     private var irregularTableViewTopConstraint: NSLayoutConstraint!
     
@@ -65,6 +74,44 @@ final class IrregularEventsViewController: UIViewController {
         return tableView
     }()
     
+    private lazy var emojiLabel: UILabel = {
+        let emojiLabel = UILabel()
+        emojiLabel.text = "Emoji"
+        emojiLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        return emojiLabel
+    }()
+    
+    private lazy var colorLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Цвет"
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        return label
+        
+    }()
+    
+    lazy var emojiCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: 52, height: 52)
+        layout.minimumInteritemSpacing = 5
+        layout.minimumLineSpacing = 0
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .black
+        collectionView.register(EmojiCollectionViewCell.self, forCellWithReuseIdentifier: EmojiCollectionViewCell.reuseIdentifier)
+        collectionView.backgroundColor = .white
+        return collectionView
+    }()
+    
+    lazy var colorCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: 52, height: 52)
+        layout.minimumInteritemSpacing = 5
+        layout.minimumLineSpacing = 0
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(ColorCollectionCell.self, forCellWithReuseIdentifier: "ColorCell")
+        collectionView.isScrollEnabled = false
+        return collectionView
+    }()
+    
     private lazy var trackerDismissButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Отменить", for: .normal)
@@ -114,6 +161,12 @@ final class IrregularEventsViewController: UIViewController {
         irregularTableView.delegate = self
         
         scrollView.addSubview(contentView)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        
+        [emojiLabel, emojiCollectionView, colorLabel, colorCollectionView].forEach {
+            contentView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
         
         buttonContainerView.addSubview(trackerCreateButton)
         buttonContainerView.addSubview(trackerDismissButton)
@@ -153,13 +206,32 @@ final class IrregularEventsViewController: UIViewController {
             scrollView.bottomAnchor.constraint(equalTo: buttonContainerView.topAnchor)
         ])
         
-        // Констрейнты для scrollContentView
         NSLayoutConstraint.activate([
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            emojiLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
+            emojiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
+            
+            emojiCollectionView.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 8),
+            emojiCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            emojiCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            emojiCollectionView.heightAnchor.constraint(equalToConstant: 180),
+
+            colorLabel.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor, constant: 16),
+            colorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
+            colorLabel.heightAnchor.constraint(equalToConstant: 18),
+
+            colorCollectionView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor, constant: 20),
+            colorCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            colorCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            colorCollectionView.heightAnchor.constraint(equalToConstant: 180),
+            colorCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
         
         NSLayoutConstraint.activate([
@@ -178,6 +250,12 @@ final class IrregularEventsViewController: UIViewController {
             trackerCreateButton.topAnchor.constraint(equalTo: buttonContainerView.topAnchor, constant: 6),
             trackerCreateButton.bottomAnchor.constraint(equalTo: buttonContainerView.bottomAnchor),
         ])
+        
+        emojiCollectionView.dataSource = self
+        emojiCollectionView.delegate = self
+        
+        colorCollectionView.dataSource = self
+        colorCollectionView.delegate = self
     }
     
     @objc private func newTrackerName(_ sender: UITextField) {
@@ -189,23 +267,27 @@ final class IrregularEventsViewController: UIViewController {
     }
     
     @objc private func didTapCreateButton() {
-        let alert = UIAlertController(title: "Внимание!",
-                                      message: "Данная функция доступна \nв платной версии",
-                                      preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default)
-        alert.addAction(action)
-        self.present(alert, animated: true, completion: nil)
+
+        
+        guard let name = irregularNameTextField.text, let category = selectedCategory, let color = selectedColor, let emoji = selectedEmoji, !name.isEmpty else { return }
+        
+        let newTracker = Tracker(id: UUID(), title: name, color: color, emoji: emoji, schedule: [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday])
+        trackerStore.saveTrackerToCoreData(id: UUID(), title: name, color: color, emoji: emoji, schedule: [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday])
+        NotificationCenter.default.post(name: .didCreateNewTracker, object: nil, userInfo: ["first": newTracker, "second": category])
+        
+        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
     
     @objc private func hideKeyboard() {
         view.endEditing(true)
     }
     
-    private func blockButtons() {
+    func blockButtons() {
         guard let trackerName = irregularNameTextField.text else { return }
         
         if trackerName.isEmpty == false && selectedCategory != nil &&
-            selectedCategory != "" && trackerName.count < 38 {
+            selectedCategory != "" && selectedEmoji != "" &&
+            selectedColor != nil && trackerName.count < 38 {
             trackerCreateButton.isEnabled = true
             trackerCreateButton.backgroundColor = .black
         } else {

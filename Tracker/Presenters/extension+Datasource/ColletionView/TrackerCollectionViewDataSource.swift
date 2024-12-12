@@ -14,12 +14,13 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         
         let tracker = visibleTrackers[indexPath.row]
         
-        let isCompletedToday = completedTrackers.contains {
-            $0.trackerID == tracker.id && Calendar.current.isDate($0.date, inSameDayAs: currentDate ?? Date())
-        }
+//        let isCompletedToday = completedTrackers.contains {
+//            $0.trackerID == tracker.id && Calendar.current.isDate($0.date, inSameDayAs: currentDate ?? Date())
+//        }
+        let isCompletedToday = trackerRecordStore.importCoreDataRecordComplete(id: tracker.id, trackerDate: currentDate ?? Date())
+        
         cell.trackerDone = isCompletedToday
-        let completedTrackersCount = completedTrackers.filter { $0.trackerID == tracker.id }.count
-        cell.configure(with: tracker, completedCount: completedTrackersCount, isCompletedToday: isCompletedToday)
+        cell.configure(with: tracker, isCompletedToday: isCompletedToday)
         cell.delegate = self
         
         if (currentDate ?? Date()) <= Date() {

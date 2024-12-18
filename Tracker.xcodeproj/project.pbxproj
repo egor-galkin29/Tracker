@@ -19,6 +19,9 @@
 		2FA2030E2D069AAF0056B6ED /* TrackercategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA2030D2D069AAF0056B6ED /* TrackercategoryStore.swift */; };
 		2FA203102D069B650056B6ED /* TracerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA2030F2D069B650056B6ED /* TracerRecordStore.swift */; };
 		2FA203132D08A3640056B6ED /* TrackerCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2FA203112D08A3640056B6ED /* TrackerCoreData.xcdatamodeld */; };
+		2FA203BB2D1110880056B6ED /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA203BA2D1110880056B6ED /* OnboardingViewController.swift */; };
+		2FA203BD2D1110DA0056B6ED /* OnboardingFirstScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA203BC2D1110D90056B6ED /* OnboardingFirstScreen.swift */; };
+		2FA203BF2D11110A0056B6ED /* OnboardingSecondScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA203BE2D11110A0056B6ED /* OnboardingSecondScreen.swift */; };
 		2FAA64B72CCEE5E90074CE47 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAA64B62CCEE5E90074CE47 /* AppDelegate.swift */; };
 		2FAA64B92CCEE5E90074CE47 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAA64B82CCEE5E90074CE47 /* SceneDelegate.swift */; };
 		2FAA64BB2CCEE5E90074CE47 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAA64BA2CCEE5E90074CE47 /* TrackersViewController.swift */; };
@@ -54,6 +57,9 @@
 		2FA2030D2D069AAF0056B6ED /* TrackercategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackercategoryStore.swift; sourceTree = "<group>"; };
 		2FA2030F2D069B650056B6ED /* TracerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TracerRecordStore.swift; sourceTree = "<group>"; };
 		2FA203122D08A3640056B6ED /* TrackerCoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerCoreData.xcdatamodel; sourceTree = "<group>"; };
+		2FA203BA2D1110880056B6ED /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		2FA203BC2D1110D90056B6ED /* OnboardingFirstScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFirstScreen.swift; sourceTree = "<group>"; };
+		2FA203BE2D11110A0056B6ED /* OnboardingSecondScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSecondScreen.swift; sourceTree = "<group>"; };
 		2FAA64B32CCEE5E90074CE47 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FAA64B62CCEE5E90074CE47 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2FAA64B82CCEE5E90074CE47 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -170,6 +176,24 @@
 			path = Store;
 			sourceTree = "<group>";
 		};
+		2FA203B92D11104F0056B6ED /* OnboardingScreens */ = {
+			isa = PBXGroup;
+			children = (
+				2FA203C02D1111270056B6ED /* Screens */,
+				2FA203BA2D1110880056B6ED /* OnboardingViewController.swift */,
+			);
+			path = OnboardingScreens;
+			sourceTree = "<group>";
+		};
+		2FA203C02D1111270056B6ED /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				2FA203BC2D1110D90056B6ED /* OnboardingFirstScreen.swift */,
+				2FA203BE2D11110A0056B6ED /* OnboardingSecondScreen.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
 		2FAA64AA2CCEE5E90074CE47 = {
 			isa = PBXGroup;
 			children = (
@@ -212,6 +236,7 @@
 		2FAA64D42CDBD4230074CE47 /* Presenters */ = {
 			isa = PBXGroup;
 			children = (
+				2FA203B92D11104F0056B6ED /* OnboardingScreens */,
 				2F3AB8E52D020494005C9DA2 /* extension+Datasource */,
 				2FE362DD2CF8217700D83A19 /* CreationNewTrakers */,
 				2FE362D42CF4EA1D00D83A19 /* TrackerCollectionView */,
@@ -345,6 +370,7 @@
 				2F3AB8E92D020627005C9DA2 /* HabbitcollectionsDataSource.swift in Sources */,
 				2FA203102D069B650056B6ED /* TracerRecordStore.swift in Sources */,
 				2FE362E62CF94ACE00D83A19 /* ChoosingCategoryViewController.swift in Sources */,
+				2FA203BD2D1110DA0056B6ED /* OnboardingFirstScreen.swift in Sources */,
 				2FA202B72D0355F00056B6ED /* ColorCollectionCell.swift in Sources */,
 				2FA2030E2D069AAF0056B6ED /* TrackercategoryStore.swift in Sources */,
 				2FAA64BB2CCEE5E90074CE47 /* TrackersViewController.swift in Sources */,
@@ -358,6 +384,8 @@
 				2FAA65972CEF89A40074CE47 /* Tracker.swift in Sources */,
 				2FA203132D08A3640056B6ED /* TrackerCoreData.xcdatamodeld in Sources */,
 				2FAA64B72CCEE5E90074CE47 /* AppDelegate.swift in Sources */,
+				2FA203BF2D11110A0056B6ED /* OnboardingSecondScreen.swift in Sources */,
+				2FA203BB2D1110880056B6ED /* OnboardingViewController.swift in Sources */,
 				2FAA64B92CCEE5E90074CE47 /* SceneDelegate.swift in Sources */,
 				2FA202BA2D0390780056B6ED /* irregularEventsColectionDataSource.swift in Sources */,
 				2FAA659E2CEF8AAB0074CE47 /* TrackerCategory.swift in Sources */,

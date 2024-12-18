@@ -124,7 +124,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         setUpNavigationBar()
         addAllConstraints()
         setupSearchBar()
-        trackerStore.importCoreDataTracker()
         
         currentTrackersView()
     }

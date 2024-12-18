@@ -28,7 +28,7 @@ extension HabitViewController: UITableViewDataSource, UITableViewDelegate {
             cell.detailTextLabel?.textColor = .ypGray
             
             if indexPath.row == 1 {
-                cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: CGFloat.greatestFiniteMagnitude)
+                //cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: CGFloat.greatestFiniteMagnitude)
                 cell.layoutMargins = .zero
             } else {
                 cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
@@ -50,9 +50,9 @@ extension HabitViewController: UITableViewDataSource, UITableViewDelegate {
             self.present(controller, animated: true, completion: nil)
         }
         else {
-            //            let controller = CategoryViewController()
-            //            controller.delegate = self
-            //            self.present(controller, animated: true, completion: nil)
+            let controller = ChoosingCategoryViewController()
+            controller.delegate = self
+            self.present(controller, animated: true, completion: nil)
         }
     }
 }

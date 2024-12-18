@@ -20,6 +20,7 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         
         do {
             try context.save()
+            print("трекер сохраненн")
         } catch {
             print("Неполучилось сохранить контес")
         }

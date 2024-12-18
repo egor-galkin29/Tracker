@@ -74,7 +74,6 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
         tableView.separatorColor = .ypGray
         tableView.separatorInset.left = 16
         tableView.separatorInset.right = 16
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Properties cell")
         return tableView
     }()
@@ -145,7 +144,7 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        selectedCategory = "Важное"
+        //selectedCategory = "Важное"
         setupViews()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
@@ -327,5 +326,12 @@ extension HabitViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+}
 
+extension HabitViewController: CategoryViewControllerDelegate {
+    func newCategorySelect(category: String) {
+        self.selectedCategory = category
+        blockButtons()
+        habbitTableView.reloadData()
+    }
 }

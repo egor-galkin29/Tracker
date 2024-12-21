@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F0D538E2D1670CF00CF4D13 /* EditCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0D538D2D1670CF00CF4D13 /* EditCategoryViewController.swift */; };
 		2F3AB8E22CFFF591005C9DA2 /* IrregularEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3AB8E12CFFF591005C9DA2 /* IrregularEventsViewController.swift */; };
 		2F3AB8E42CFFF884005C9DA2 /* extation+irregularTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3AB8E32CFFF884005C9DA2 /* extation+irregularTableView.swift */; };
 		2F3AB8E92D020627005C9DA2 /* HabbitcollectionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3AB8E82D020627005C9DA2 /* HabbitcollectionsDataSource.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F0D538D2D1670CF00CF4D13 /* EditCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCategoryViewController.swift; sourceTree = "<group>"; };
 		2F3AB8E12CFFF591005C9DA2 /* IrregularEventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IrregularEventsViewController.swift; sourceTree = "<group>"; };
 		2F3AB8E32CFFF884005C9DA2 /* extation+irregularTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "extation+irregularTableView.swift"; sourceTree = "<group>"; };
 		2F3AB8E82D020627005C9DA2 /* HabbitcollectionsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabbitcollectionsDataSource.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 				2FE362E52CF94ACE00D83A19 /* ChoosingCategoryViewController.swift */,
 				2F5DFC3B2D126A1A000BA991 /* CategoryViewModel.swift */,
 				2F5DFC3D2D132494000BA991 /* NewCategoryViewController.swift */,
+				2F0D538D2D1670CF00CF4D13 /* EditCategoryViewController.swift */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -278,6 +281,7 @@
 		2FE362DD2CF8217700D83A19 /* CreationNewTrakers */ = {
 			isa = PBXGroup;
 			children = (
+				2F6416922CFA51320031333E /* Category */,
 				2FA202B82D038E6F0056B6ED /* HabbitCollectionsCells */,
 				2FE362DE2CF821AF00D83A19 /* CreationNewTrakersViewController.swift */,
 				2F3AB8E02CFFF528005C9DA2 /* IrregularEvents */,
@@ -290,7 +294,6 @@
 			isa = PBXGroup;
 			children = (
 				2F6416932CFA51420031333E /* Schedule */,
-				2F6416922CFA51320031333E /* Category */,
 				2FE362E12CF823D200D83A19 /* HabitViewController.swift */,
 			);
 			path = HabitTraker;
@@ -390,6 +393,7 @@
 				2FAA65972CEF89A40074CE47 /* Tracker.swift in Sources */,
 				2FAA64B72CCEE5E90074CE47 /* AppDelegate.swift in Sources */,
 				2FA203BF2D11110A0056B6ED /* OnboardingSecondScreen.swift in Sources */,
+				2F0D538E2D1670CF00CF4D13 /* EditCategoryViewController.swift in Sources */,
 				2FA203BB2D1110880056B6ED /* OnboardingViewController.swift in Sources */,
 				2F5DFC3C2D126A1A000BA991 /* CategoryViewModel.swift in Sources */,
 				2FAA64B92CCEE5E90074CE47 /* SceneDelegate.swift in Sources */,

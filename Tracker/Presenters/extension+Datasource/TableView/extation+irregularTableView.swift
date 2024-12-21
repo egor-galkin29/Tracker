@@ -27,11 +27,10 @@ extension IrregularEventsViewController: UITableViewDataSource, UITableViewDeleg
         return 75
     }
     
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        tableView.deselectRow(at: indexPath, animated: true)
-//        
-//                    let controller = CategoryViewController()
-//                    controller.delegate = self
-//                    self.present(controller, animated: true, completion: nil)
-//    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+            let controller = ChoosingCategoryViewController()
+            controller.delegate = self
+            self.present(controller, animated: true, completion: nil)
+    }
 }

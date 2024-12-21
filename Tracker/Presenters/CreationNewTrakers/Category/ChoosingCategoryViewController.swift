@@ -150,6 +150,7 @@ extension ChoosingCategoryViewController: UITableViewDataSource, UITableViewDele
         cell.textLabel?.textColor = .black
         cell.backgroundColor = .ypLightGray
         cell.selectionStyle = .none
+        
        
         cell.accessoryType = (viewModel.isSelectedCategory(category: category)) ? .checkmark : .none
        
@@ -160,6 +161,13 @@ extension ChoosingCategoryViewController: UITableViewDataSource, UITableViewDele
         } else {
             cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
             cell.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        }
+        
+        let isLastCell = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
+        if isLastCell {
+            cell.layer.cornerRadius = 16
+            cell.layer.masksToBounds = true
+            cell.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner] // Закругление только нижних углов
         }
         
         return cell
@@ -175,14 +183,13 @@ extension ChoosingCategoryViewController: UITableViewDataSource, UITableViewDele
  
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        //        guard indexPath.row != 0 else {return nil}
         
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { action in
-//            let editAction =
-//            UIAction(title: NSLocalizedString("Редактировать", comment: ""),
-//                     image: UIImage(systemName: "pencil")) { action in
-//                self.editCategoryName(indexPath: indexPath)
-//            }
+            let editAction =
+            UIAction(title: NSLocalizedString("Редактировать", comment: ""),
+                     image: UIImage(systemName: "pencil")) { action in
+                self.editCategoryName(indexPath: indexPath)
+            }
             
             let deleteAction =
             UIAction(title: NSLocalizedString("Удалить", comment: ""),
@@ -190,20 +197,19 @@ extension ChoosingCategoryViewController: UITableViewDataSource, UITableViewDele
                      attributes: .destructive) { action in
                 self.deleteCategory(indexPath: indexPath)
             }
-            return UIMenu(title: "", children: [/*editAction,*/ deleteAction])
+            return UIMenu(title: "", children: [editAction, deleteAction])
         })
     }
     
     
-//    private func editCategoryName(indexPath: IndexPath) {
-//        let controller = EditCategoryViewController()
-//        let category = viewModel.actualCategories[indexPath.row]
-//        controller.delegate = self
-//        controller.oldCategoryName = category
-//        self.present(controller, animated: true, completion: nil)
-//    }
+    private func editCategoryName(indexPath: IndexPath) {
+        let controller = EditCategoryViewController()
+        let category = viewModel.actualCategories[indexPath.row]
+        controller.delegate = self
+        controller.oldCategoryName = category
+        self.present(controller, animated: true, completion: nil)
+    }
     
-    /// Метод удаления категории через алерт и viewmodel
     private func deleteCategory(indexPath: IndexPath) {
         let category = self.viewModel.actualCategories[indexPath.row]
         
@@ -225,6 +231,13 @@ extension ChoosingCategoryViewController: UITableViewDataSource, UITableViewDele
 extension ChoosingCategoryViewController: NewCategoryViewControllerDelegate {
     func createNewCategoryName(categoryName: String) {
         viewModel.addCategory(categoryName: categoryName)
+        categoriesTableView.reloadData()
+    }
+}
+
+extension ChoosingCategoryViewController: EditCategoryViewControllerDelegate {
+    func editNewCategoryName(oldCategoryName: String, newCategoryName: String) {
+        try? viewModel.editCategory(categoryName: oldCategoryName, newCategoryName: newCategoryName)
         categoriesTableView.reloadData()
     }
 }

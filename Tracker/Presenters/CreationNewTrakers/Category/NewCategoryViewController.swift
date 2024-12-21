@@ -55,6 +55,10 @@ final class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         newCategoryName.delegate = self
         
         createView()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
     }
     
     private func createView() {
@@ -102,5 +106,9 @@ final class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         guard let categoryName = newCategoryName.text else { return }
         delegate?.createNewCategoryName(categoryName: categoryName)
         dismiss(animated: true, completion: nil)
+    }
+    
+    @objc private func hideKeyboard() {
+        view.endEditing(true)
     }
 }

@@ -140,7 +140,6 @@ final class IrregularEventsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        selectedCategory = "Важное"
         setupViews()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
@@ -267,12 +266,12 @@ final class IrregularEventsViewController: UIViewController {
     }
     
     @objc private func didTapCreateButton() {
-
-        
         guard let name = irregularNameTextField.text, let category = selectedCategory, let color = selectedColor, let emoji = selectedEmoji, !name.isEmpty else { return }
         
         let newTracker = Tracker(id: UUID(), title: name, color: color, emoji: emoji, schedule: [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday])
-        trackerStore.saveTrackerToCoreData(id: UUID(), title: name, color: color, emoji: emoji, schedule: [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday])
+        
+        trackerStore.saveTrackerToCoreData(id: UUID(), title: name, color: color, emoji: emoji, schedule: [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday], categoryName: category)
+        
         NotificationCenter.default.post(name: .didCreateNewTracker, object: nil, userInfo: ["first": newTracker, "second": category])
         
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
@@ -307,6 +306,14 @@ extension IrregularEventsViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+}
+
+extension IrregularEventsViewController: CategoryViewControllerDelegate {
+    func newCategorySelect(category: String) {
+        self.selectedCategory = category
+        blockButtons()
+        irregularTableView.reloadData()
     }
 }
 

@@ -8,7 +8,7 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
     private var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     private var fetchedResultController: NSFetchedResultsController<TrackerCoreData>?
     
-    func saveTrackerToCoreData(id: UUID, title: String, color: UIColor, emoji: String, schedule: [WeekDays]) {
+    func saveTrackerToCoreData(id: UUID, title: String, color: UIColor, emoji: String, schedule: [WeekDays], categoryName: String) {
         let trackerCoreDataEntity = TrackerCoreData(context: context)
         let stringTrackerSchedule = ScheduleTransformer.shared.daysToString(days: schedule)
         
@@ -18,8 +18,23 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         trackerCoreDataEntity.emoji = emoji
         trackerCoreDataEntity.schedule = stringTrackerSchedule
         
+        let categoryRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        categoryRequest.predicate = NSPredicate(format: "title == %@", categoryName)
+        ///проверяем существует ли категория
+        let categoryCoreData: TrackerCategoryCoreData
+        if let existingCategory = try? context.fetch(categoryRequest).first {
+            categoryCoreData = existingCategory
+        } else {
+            categoryCoreData = TrackerCategoryCoreData(context: context)
+            categoryCoreData.title = categoryName
+        }
+        
+        trackerCoreDataEntity.categoryName = categoryCoreData
+        categoryCoreData.addToTrackerInCategory(trackerCoreDataEntity)
+        
         do {
             try context.save()
+            print("трекер сохраненн")
         } catch {
             print("Неполучилось сохранить контес")
         }
@@ -43,5 +58,18 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         }
         
         return fetchedResultController?.fetchedObjects ?? []
+    }
+    
+    private func getCoreDataFromCategory(categoryName: String) throws -> TrackerCategoryCoreData  {
+        
+        let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "title == %@", categoryName)
+        
+        guard let trackerCategoryCoreData = try? context.fetch(fetchRequest).first else {
+            let trackerCategoryCoreData = TrackerCategoryCoreData(context: context)
+            trackerCategoryCoreData.title = categoryName
+            return trackerCategoryCoreData
+        }
+        return trackerCategoryCoreData
     }
 }

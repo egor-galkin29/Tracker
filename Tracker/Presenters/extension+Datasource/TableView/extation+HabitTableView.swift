@@ -41,6 +41,7 @@ extension HabitViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -50,9 +51,9 @@ extension HabitViewController: UITableViewDataSource, UITableViewDelegate {
             self.present(controller, animated: true, completion: nil)
         }
         else {
-            //            let controller = CategoryViewController()
-            //            controller.delegate = self
-            //            self.present(controller, animated: true, completion: nil)
+            let controller = ChoosingCategoryViewController()
+            controller.delegate = self
+            self.present(controller, animated: true, completion: nil)
         }
     }
 }

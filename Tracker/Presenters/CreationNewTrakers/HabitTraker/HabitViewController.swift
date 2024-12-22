@@ -74,7 +74,6 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
         tableView.separatorColor = .ypGray
         tableView.separatorInset.left = 16
         tableView.separatorInset.right = 16
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Properties cell")
         return tableView
     }()
@@ -145,7 +144,6 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        selectedCategory = "Важное"
         setupViews()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
@@ -268,17 +266,31 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
     }
     
     @objc private func didTapCancelButton() {
-        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+        dismiss(animated: true) {
+            if let sceneDelegate = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first?.delegate as? SceneDelegate {
+                sceneDelegate.transitionToTrackerViewController()
+            }
+        }
     }
     
     @objc private func didTapCreateButton() {
         guard let name = habbitNameTextField.text, let category = selectedCategory, let color = selectedColor, let emoji = selectedEmoji, !name.isEmpty else { return }
         
         let newTracker = Tracker(id: UUID(), title: name, color: color, emoji: emoji, schedule: schedule)
-        trackerStore.saveTrackerToCoreData(id: UUID(), title: name, color: color, emoji: emoji, schedule: schedule)
+        
+        trackerStore.saveTrackerToCoreData(id: UUID(), title: name, color: color, emoji: emoji, schedule: schedule, categoryName: category)
+        
         NotificationCenter.default.post(name: .didCreateNewTracker, object: nil, userInfo: ["first": newTracker, "second": category])
         
-        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+        dismiss(animated: true) {
+            if let sceneDelegate = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first?.delegate as? SceneDelegate {
+                sceneDelegate.transitionToTrackerViewController()
+            }
+        }
     }
     
     @objc private func hideKeyboard() {
@@ -327,5 +339,12 @@ extension HabitViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+}
 
+extension HabitViewController: CategoryViewControllerDelegate {
+    func newCategorySelect(category: String) {
+        self.selectedCategory = category
+        blockButtons()
+        habbitTableView.reloadData()
+    }
 }

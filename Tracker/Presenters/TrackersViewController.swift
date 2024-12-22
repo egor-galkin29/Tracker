@@ -55,11 +55,14 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: Public Properties
     
-    var visibleTrackers: [Tracker] = []
+    /// сохраняет категории из store
     var categories: [TrackerCategory] = []
+    /// используеться для показа категорий
+    var visibleCategories: [TrackerCategory] = []
         
     let trackerStore = TrackerStore.shared
     let trackerRecordStore = TrackerRecordStore.shared
+    let trackerCategoryStore = TrackerCategoryStore.shared
     
     var currentDate: Date? {
         let selectedDate = pickerDate.date
@@ -74,7 +77,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     private let searchContainer = UIView()
     private let searchBar = UISearchBar()
     
-    private var trackers: [Tracker] = []
     private var categoryName: [String] = []
     
     private var completedTrackersID = Set<UUID>()
@@ -99,34 +101,38 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         
         if let newTracker = userInfo["first"] as? Tracker,
            let selectedCategoryString = userInfo["second"] as? String? {
-            trackers.append(newTracker)
             guard let selectedCategory = selectedCategoryString else { return }
-            let newCategory = TrackerCategory(title: selectedCategory, trackers: trackers)
-            self.categories = [newCategory]
+            
+            print("новый трекер: \(newTracker), добавлен в категорию: \(selectedCategory)")
         } else {
             print("Ошибка добавления трекера")
         }
         
-        collectionView.reloadData()
+        categories = (try? trackerCategoryStore.importCategoryWithTrackersFromCoreData()) ?? []
+
         currentTrackersView()
         placeholderVisible()
+        collectionView.reloadData()
     }
     // MARK: Override Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveNewTrackerNotification(_:)), name: .didCreateNewTracker, object: nil)
-        
-        
         setupCollectionView()
         setupView()
         setUpNavigationBar()
         addAllConstraints()
         setupSearchBar()
-        trackerStore.importCoreDataTracker()
+        
+        categories = (try? trackerCategoryStore.importCategoryWithTrackersFromCoreData()) ?? []
         
         currentTrackersView()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveNewTrackerNotification(_:)), name: .didCreateNewTracker, object: nil)
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tapGesture)
     }
     
     // MARK: Public Methods
@@ -135,7 +141,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     // MARK: Private Methods
     
     private func placeholderVisible() {
-        if visibleTrackers.isEmpty {
+        if visibleCategories.isEmpty {
             placeholderImageView.isHidden = false
             emptyLabel.isHidden = false
             collectionView.isHidden = true
@@ -226,21 +232,21 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         var currentWeekDay = calendar.component(.weekday, from: currentDate)
         currentWeekDay = (currentWeekDay + 5) % 7
         
-        let trackersFromCoreData = trackerStore.importCoreDataTracker()
-        let appTrackers = trackersFromCoreData.map { Tracker(from: $0)}
+        visibleCategories = []
         
-        visibleTrackers = []
-        
-        for category in categories {
-            for onetracker in category.trackers where (onetracker.schedule.contains(WeekDays.allCases[currentWeekDay]))  {
-                visibleTrackers.append(onetracker)
+        categories.forEach {
+            let visibleTracker = $0.trackers.filter({$0.schedule.contains(WeekDays.allCases[currentWeekDay])})
+            if !visibleTracker.isEmpty {
+                visibleCategories.append(TrackerCategory(title: $0.title, trackers: visibleTracker))
             }
         }
         
-        visibleTrackers = Array(visibleTrackers.reduce(into: [UUID: Tracker]()) { $0[$1.id] = $1 }.values)
-
         collectionView.reloadData()
         placeholderVisible()
+    }
+    
+    @objc private func hideKeyboard() {
+        view.endEditing(true)
     }
 }
 
@@ -266,15 +272,15 @@ extension TrackersViewController {
 
 extension TrackersViewController: TrackerCellDelegate {
     func completeTracker(_ trackerCell: CollectionViewCell, id: UUID, trackerDone: Bool) {
-        let calendar = Calendar.current
-        
+        let date = currentDate ?? Date()
+        print(date)
         if trackerDone {
             completedTrackersID.insert(id)
-            trackerRecordStore.saveRecordToCoreData(id: id, trackerDate: currentDate ?? Date())
+            trackerRecordStore.saveRecordToCoreData(id: id, trackerDate: date)
             collectionView.reloadData()
         } else {
             completedTrackersID.remove(id)
-            trackerRecordStore.deleteRecordFromCoreData(id: id, trackerDate: currentDate ?? Date())
+            trackerRecordStore.deleteRecordFromCoreData(id: id, trackerDate: date)
             collectionView.reloadData()
         }
     }

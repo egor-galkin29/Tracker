@@ -114,17 +114,17 @@ final class CollectionViewCell: UICollectionViewCell {
         let imageName = trackerDone ? "checkmark" : "plus"
         doneButton.setImage(UIImage(systemName: imageName), for: .normal)
         doneButton.alpha = trackerDone ? 0.3 : 1.0
-//        if let id = trackerID {
-//            delegate?.completeTracker(self, id: id, trackerDone: trackerDone)
-//            print("НОМЕР ТРЕКЕРА \(id)")
-//        }
-        
-        if trackerDone {
-            trackerRecordStore.saveRecordToCoreData(id: id, trackerDate: currentDate)
-        } else {
-            trackerRecordStore.deleteRecordFromCoreData(id: id, trackerDate: currentDate)
+        if let id = trackerID {
+            delegate?.completeTracker(self, id: id, trackerDone: trackerDone)
+            print("НОМЕР ТРЕКЕРА \(id)")
         }
         
+//        if trackerDone {
+//            trackerRecordStore.saveRecordToCoreData(id: id, trackerDate: currentDate)
+//        } else {
+//            trackerRecordStore.deleteRecordFromCoreData(id: id, trackerDate: currentDate)
+//        }
+//        
         let completedCountCoreData = trackerRecordStore.countCoreDataRecordComplete(id: id)
         daysCountLable.text = daysText(for: completedCountCoreData)
     }

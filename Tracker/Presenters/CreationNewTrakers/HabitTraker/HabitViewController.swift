@@ -266,7 +266,13 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
     }
     
     @objc private func didTapCancelButton() {
-        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+        dismiss(animated: true) {
+            if let sceneDelegate = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first?.delegate as? SceneDelegate {
+                sceneDelegate.transitionToTrackerViewController()
+            }
+        }
     }
     
     @objc private func didTapCreateButton() {
@@ -278,7 +284,13 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
         
         NotificationCenter.default.post(name: .didCreateNewTracker, object: nil, userInfo: ["first": newTracker, "second": category])
         
-        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+        dismiss(animated: true) {
+            if let sceneDelegate = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first?.delegate as? SceneDelegate {
+                sceneDelegate.transitionToTrackerViewController()
+            }
+        }
     }
     
     @objc private func hideKeyboard() {

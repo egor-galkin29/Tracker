@@ -272,15 +272,15 @@ extension TrackersViewController {
 
 extension TrackersViewController: TrackerCellDelegate {
     func completeTracker(_ trackerCell: CollectionViewCell, id: UUID, trackerDone: Bool) {
-        let calendar = Calendar.current
-        
+        let date = pickerDate.date
+        print(date)
         if trackerDone {
             completedTrackersID.insert(id)
-            trackerRecordStore.saveRecordToCoreData(id: id, trackerDate: currentDate ?? Date())
+            trackerRecordStore.saveRecordToCoreData(id: id, trackerDate: date)
             collectionView.reloadData()
         } else {
             completedTrackersID.remove(id)
-            trackerRecordStore.deleteRecordFromCoreData(id: id, trackerDate: currentDate ?? Date())
+            trackerRecordStore.deleteRecordFromCoreData(id: id, trackerDate: date)
             collectionView.reloadData()
         }
     }

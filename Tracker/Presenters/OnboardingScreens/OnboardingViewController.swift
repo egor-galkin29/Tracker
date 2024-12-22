@@ -81,5 +81,5 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
             pageControl.currentPage = currentIndex
         }
     }
-    
 }
+

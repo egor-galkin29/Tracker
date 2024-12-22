@@ -167,7 +167,7 @@ extension ChoosingCategoryViewController: UITableViewDataSource, UITableViewDele
         if isLastCell {
             cell.layer.cornerRadius = 16
             cell.layer.masksToBounds = true
-            cell.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner] // Закругление только нижних углов
+            cell.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
         }
         
         return cell

@@ -272,7 +272,7 @@ extension TrackersViewController {
 
 extension TrackersViewController: TrackerCellDelegate {
     func completeTracker(_ trackerCell: CollectionViewCell, id: UUID, trackerDone: Bool) {
-        let date = pickerDate.date
+        let date = currentDate ?? Date()
         print(date)
         if trackerDone {
             completedTrackersID.insert(id)

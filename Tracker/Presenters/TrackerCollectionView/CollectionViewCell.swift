@@ -118,15 +118,8 @@ final class CollectionViewCell: UICollectionViewCell {
             delegate?.completeTracker(self, id: id, trackerDone: trackerDone)
             print("НОМЕР ТРЕКЕРА \(id)")
         }
-        
-//        if trackerDone {
-//            trackerRecordStore.saveRecordToCoreData(id: id, trackerDate: currentDate)
-//        } else {
-//            trackerRecordStore.deleteRecordFromCoreData(id: id, trackerDate: currentDate)
-//        }
-//        
         let completedCountCoreData = trackerRecordStore.countCoreDataRecordComplete(id: id)
-        daysCountLable.text = daysText(for: completedCountCoreData)
+        daysCountLable.text =  String.localizedStringWithFormat(NSLocalizedString("numberOfDays", comment: "") , completedCountCoreData)
     }
     
     func configure(with tracker: Tracker, isCompletedToday: Bool) {
@@ -136,24 +129,9 @@ final class CollectionViewCell: UICollectionViewCell {
         doneButton.backgroundColor = tracker.color
         trackerID = tracker.id
         let completedCountCoreData = trackerRecordStore.countCoreDataRecordComplete(id: tracker.id)
-        daysCountLable.text = daysText(for: completedCountCoreData)
+        daysCountLable.text =  String.localizedStringWithFormat(NSLocalizedString("numberOfDays", comment: "") , completedCountCoreData)
         let imageName = trackerDone ? "checkmark" : "plus"
         doneButton.setImage(UIImage(systemName: imageName), for: .normal)
         doneButton.alpha = trackerDone ? 0.3 : 1.0
-    }
-    
-    private func daysText(for count: Int) -> String {
-        let lastDigit = count % 10
-        let lastTwoDigits = count % 100
-        
-        if lastTwoDigits >= 11 && lastTwoDigits <= 19 {
-            return "\(count) дней"
-        } else if lastDigit == 1 {
-            return "\(count) день"
-        } else if lastDigit >= 2 && lastDigit <= 4 {
-            return "\(count) дня"
-        } else {
-            return "\(count) дней"
-        }
     }
 }

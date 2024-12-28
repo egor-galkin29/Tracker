@@ -12,7 +12,8 @@ final class OnboardingFirstScreen: UIViewController {
     
     private lazy var onboardingTitle: UILabel = {
         let label = UILabel()
-        label.text = "Отслеживайте только \nто, что хотите"
+        let localizedString = NSLocalizedString("onboardingTitleOne", comment: "")
+        label.text = localizedString
         label.font = .systemFont(ofSize: 32, weight: .bold)
         
         label.textAlignment = .center
@@ -23,7 +24,8 @@ final class OnboardingFirstScreen: UIViewController {
     
     private lazy var onboardingButtonOne: UIButton = {
         let button = UIButton()
-        button.setTitle("Вот это технологии!", for: .normal)
+        let localizedString = NSLocalizedString("onboardingButton", comment: "")
+        button.setTitle(localizedString, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black

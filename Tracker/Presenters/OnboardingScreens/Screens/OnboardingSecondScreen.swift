@@ -11,7 +11,8 @@ final class OnboardingSecondScreen: UIViewController {
     
     private lazy var onboardingTitle: UILabel = {
         let label = UILabel()
-        label.text = "Даже если это\nне литры воды и йога"
+        let localizedString = NSLocalizedString("onboardingTitleTwo", comment: "")
+        label.text = localizedString
         label.font = .systemFont(ofSize: 32, weight: .bold)
         label.textAlignment = .center
         label.lineBreakMode = .byWordWrapping
@@ -21,7 +22,8 @@ final class OnboardingSecondScreen: UIViewController {
     
     private lazy var onboardingButtonTwo: UIButton = {
         let button = UIButton()
-        button.setTitle("Вот это технологии!", for: .normal)
+        let localizedString = NSLocalizedString("onboardingButton", comment: "")
+        button.setTitle(localizedString, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black

@@ -8,7 +8,8 @@ final class ChoosingCategoryViewController: UIViewController {
     
     private lazy var viewTitle: UILabel = {
         let label = UILabel()
-        label.text = "Категория"
+        let localizedString = NSLocalizedString("categoryName", comment: "")
+        label.text = localizedString
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -23,7 +24,8 @@ final class ChoosingCategoryViewController: UIViewController {
     
     private lazy var placeholderLabel: UILabel = {
         let label = UILabel()
-        label.text = "Привычки и события можно \nобъединить по смыслу"
+        let localizedString = NSLocalizedString("categoryPlaceholder", comment: "")
+        label.text = localizedString
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .black
         label.textAlignment = .center
@@ -49,7 +51,9 @@ final class ChoosingCategoryViewController: UIViewController {
     
     private lazy var createCategoryButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Добавить категорию", for: .normal)
+        let localizedString = NSLocalizedString("addCategoryButton", comment: "")
+
+        button.setTitle(localizedString, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black

@@ -16,13 +16,15 @@ extension HabitViewController: UITableViewDataSource, UITableViewDelegate {
         
         if indexPath.row == 0 {
             let trackerCategory = selectedCategory ?? ""
-            cell.textLabel?.text = "Категория"
+            let localizedString = NSLocalizedString("categoryName", comment: "")
+            cell.textLabel?.text = localizedString
             cell.detailTextLabel?.text = trackerCategory
             cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17)
             cell.detailTextLabel?.textColor = .ypGray
         } else if indexPath.row == 1 {
             let trackerSchedule = selectedSchedule ?? ""
-            cell.textLabel?.text = "Расписание"
+            let localizedString = NSLocalizedString("scheduleName", comment: "")
+            cell.textLabel?.text = localizedString
             cell.detailTextLabel?.text = trackerSchedule
             cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17)
             cell.detailTextLabel?.textColor = .ypGray

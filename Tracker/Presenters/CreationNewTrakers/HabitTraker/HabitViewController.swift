@@ -19,7 +19,8 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
     
     private lazy var viewControllerName: UILabel = {
         let label = UILabel()
-        label.text = "Новая привычка"
+        let localizedString = NSLocalizedString("newHabitTitle", comment: "")
+        label.text = localizedString
         label.font = .systemFont(ofSize: 16)
         label.tintColor = .black
         return label
@@ -37,7 +38,8 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
     
     lazy var habbitNameTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Введите название трекера"
+        let localizedString = NSLocalizedString("trackerCreatePlaceholder", comment: "")
+        textField.placeholder = localizedString
         textField.font = .systemFont(ofSize: 17, weight: .regular)
         textField.textColor = .black
         textField.borderStyle = .none
@@ -56,7 +58,8 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
     
     private lazy var warningLable: UILabel = {
         let lable = UILabel()
-        lable.text = "Ограничение 38 символов"
+        let localizedString = NSLocalizedString("trackerNameLimit", comment: "")
+        lable.text = localizedString
         lable.font = .systemFont(ofSize: 17, weight: .regular)
         lable.textColor = .ypRed
         lable.isHidden = true
@@ -87,7 +90,8 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
     
     private lazy var colorLabel: UILabel = {
         let label = UILabel()
-        label.text = "Цвет"
+        let localizedString = NSLocalizedString("colorCollectionTitle", comment: "")
+        label.text = localizedString
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         return label
         
@@ -118,7 +122,8 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
     
     private lazy var trackerDismissButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Отменить", for: .normal)
+        let localizedString = NSLocalizedString("cancelButton", comment: "")
+        button.setTitle(localizedString, for: .normal)
         button.setTitleColor(.systemRed, for: .normal)
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.systemRed.cgColor
@@ -129,7 +134,8 @@ final class HabitViewController: UIViewController, UICollectionViewDelegateFlowL
     
     private lazy var trackerCreateButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Создать", for: .normal)
+        let localizedString = NSLocalizedString("createButton", comment: "")
+        button.setTitle(localizedString, for: .normal)
         button.backgroundColor = .systemGray
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 16

@@ -13,11 +13,13 @@ final class TabBarController: UITabBarController {
         let mainNavController = UINavigationController(rootViewController: mainVC)
         
         mainNavController.setNavigationBarHidden(false, animated: false)
-        mainNavController.tabBarItem = UITabBarItem(title: "Трекеры", image: UIImage(named: "record_tapBar_image"), tag: 0)
+        let localizedString = NSLocalizedString("trackersAppTitle", comment: "")
+        mainNavController.tabBarItem = UITabBarItem(title: localizedString, image: UIImage(named: "record_tapBar_image"), tag: 0)
         
         // создаем вторую
+        let localizedStringTwo = NSLocalizedString("statisticAppTitle", comment: "")
         let secondVC = StatisticViewController()
-        secondVC.tabBarItem = UITabBarItem(title: "Статистика", image: UIImage(named: "hare_tapBar_image"), tag: 1)
+        secondVC.tabBarItem = UITabBarItem(title: localizedStringTwo, image: UIImage(named: "hare_tapBar_image"), tag: 1)
         
         return [mainNavController, secondVC]
     }

@@ -27,7 +27,8 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     private let emptyLabel: UILabel = {
         let label = UILabel()
-        label.text = "Что будем отслеживать?"
+        let localizedSting = NSLocalizedString("trackerPlaceholder", comment: "")
+        label.text = localizedSting
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textAlignment = .center
         return label
@@ -35,7 +36,8 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Трекеры"
+        let localizedSting = NSLocalizedString("trackersAppTitle", comment: "")
+        label.text = localizedSting
         label.font = UIFont.systemFont(ofSize: 34, weight: .bold)
         label.textAlignment = .center
         return label
@@ -252,7 +254,8 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
 
 extension TrackersViewController {
     func setupSearchBar() {
-        searchBar.placeholder = "Поиск"
+        let localizedString = NSLocalizedString("findTrackerPlaceholder", comment: "")
+        searchBar.placeholder = localizedString
         searchBar.delegate = self
         searchBar.searchTextField.layer.masksToBounds = true
         searchBar.backgroundImage = UIImage()

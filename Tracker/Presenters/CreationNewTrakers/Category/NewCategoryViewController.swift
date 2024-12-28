@@ -10,7 +10,8 @@ final class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     
     private lazy var  newCategoryTitle: UILabel = {
         let label = UILabel()
-        label.text = "Новая категория"
+        let localizedString = NSLocalizedString("newCategoryTitle", comment: "")
+        label.text = localizedString
         label.font = .systemFont(ofSize: 16, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -18,7 +19,8 @@ final class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     
     private lazy var newCategoryName: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Введите название категории"
+        let localizedString = NSLocalizedString("newCategoryPlaceholder", comment: "")
+        textField.placeholder = localizedString
         textField.font = .systemFont(ofSize: 17, weight: .regular)
         textField.borderStyle = .none
         textField.backgroundColor = .ypLightGray
@@ -35,7 +37,8 @@ final class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     
     private lazy var createButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Готово", for: .normal)
+        let localizedString = NSLocalizedString("scheduleCreate", comment: "")
+        button.setTitle(localizedString, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .ypGray

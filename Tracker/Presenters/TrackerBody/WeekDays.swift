@@ -1,23 +1,29 @@
 import Foundation
 
 enum WeekDays: String, CaseIterable {
-    case monday = "Понедельник"
-    case tuesday = "Вторник"
-    case wednesday = "Среда"
-    case thursday = "Четверг"
-    case friday = "Пятница"
-    case saturday = "Суббота"
-    case sunday = "Воскресение"
+    case monday = "monday"
+    case tuesday = "tuesday"
+    case wednesday = "wednesday"
+    case thursday = "thursday"
+    case friday = "friday"
+    case saturday = "saturday"
+    case sunday = "sunday"
     
+    // Локализованное полное название дня недели
+    var localizedName: String {
+        return NSLocalizedString(self.rawValue, comment: "")
+    }
+    
+    // Локализованное сокращенное название дня недели
     var shortDaysName: String {
         switch self {
-        case .monday: return "Пн"
-        case .tuesday: return "Вт"
-        case .wednesday: return "Ср"
-        case .thursday: return "Чт"
-        case .friday: return "Пт"
-        case .saturday: return "Сб"
-        case .sunday: return "Вс"
+        case .monday: return NSLocalizedString("mon", comment: "")
+        case .tuesday: return NSLocalizedString("tue", comment: "")
+        case .wednesday: return NSLocalizedString("wed", comment: "")
+        case .thursday: return NSLocalizedString("thu", comment: "")
+        case .friday: return NSLocalizedString("fri", comment: "")
+        case .saturday: return NSLocalizedString("sat", comment: "")
+        case .sunday: return NSLocalizedString("sun", comment: "")
         }
     }
 }

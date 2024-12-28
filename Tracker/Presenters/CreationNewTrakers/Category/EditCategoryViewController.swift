@@ -11,7 +11,8 @@ final class EditCategoryViewController: UIViewController, UITextFieldDelegate {
     /// Заголовок окна создания новой категории
     private lazy var  editCategoryTitle: UILabel = {
         let label = UILabel()
-        label.text = "Редактирование категории"
+        let localizedString = NSLocalizedString("editCategoryTitle", comment: "")
+        label.text = localizedString
         label.font = .systemFont(ofSize: 16, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -20,7 +21,8 @@ final class EditCategoryViewController: UIViewController, UITextFieldDelegate {
     /// Заголовок ввода названия новой категории
     private lazy var editCategoryName: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Введите название категории"
+        let localizedString = NSLocalizedString("editCategoryPlaceholder", comment: "")
+        textField.placeholder = localizedString
         textField.font = .systemFont(ofSize: 17, weight: .regular)
         textField.borderStyle = .none
         textField.backgroundColor = .ypLightGray
@@ -38,7 +40,8 @@ final class EditCategoryViewController: UIViewController, UITextFieldDelegate {
     // Кнопка создания новой категории
     private lazy var editCategoryCreate: UIButton = {
         let button = UIButton()
-        button.setTitle("Готово", for: .normal)
+        let localizedString = NSLocalizedString("scheduleCreate", comment: "")
+        button.setTitle(localizedString, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .ypGray

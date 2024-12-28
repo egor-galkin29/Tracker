@@ -15,7 +15,8 @@ extension IrregularEventsViewController: UITableViewDataSource, UITableViewDeleg
         cell.layer.masksToBounds = true
         
         let trackerCategory = selectedCategory ?? ""
-        cell.textLabel?.text = "Категория"
+        let localizedString = NSLocalizedString("categoryName", comment: "")
+        cell.textLabel?.text = localizedString
         cell.detailTextLabel?.text = trackerCategory
         cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17)
         cell.detailTextLabel?.textColor = .ypGray

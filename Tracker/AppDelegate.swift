@@ -1,10 +1,18 @@
 import UIKit
 import CoreData
+import YandexMobileMetrica
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool { return true }
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        guard let configuration = YMMYandexMetricaConfiguration(apiKey: "0a1eab6e-eadb-4df4-83e2-c53ad459f60a") else { // используйте ваш ключ
+            return true
+        }
+            
+        YMMYandexMetrica.activate(with: configuration)
+        return true
+    }
     
     // MARK: UISceneSession Lifecycle
     

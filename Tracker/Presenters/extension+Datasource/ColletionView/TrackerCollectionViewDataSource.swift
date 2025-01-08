@@ -70,4 +70,52 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
                                                   withHorizontalFittingPriority: .required,
                                                   verticalFittingPriority: .fittingSizeLevel)
     }
+
+//    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
+//        guard indexPaths.count > 0 else {
+//            return nil
+//        }
+//        
+//        let indexPath = indexPaths[0]
+//        let thisTracker = visibleCategories[indexPath.section].trackers[indexPath.item]
+//
+//        return UIContextMenuConfiguration(actionProvider: { actions in
+//            let localizedContextMenuPin = NSLocalizedString("contextMenuPin", comment: "")
+//            let localizedContextMenuUnpin = NSLocalizedString("contextMenuUnpin", comment: "")
+//            let localizedContextMenuEdit = NSLocalizedString("contextMenuEdit", comment: "")
+//            let localizedContextMenuDelete = NSLocalizedString("contextMenuDelete", comment: "")
+//            
+//            let pinTracker = UIAction(title: thisTracker.pinned ? localizedContextMenuUnpin : localizedContextMenuPin,
+//                                      image: UIImage(systemName: "pin")) { [self] action in
+//                
+//                if thisTracker.pinned {
+//                    self.trackerStore.unPinTracker(trackerID: thisTracker.id)
+//                } else {
+//                    self.trackerStore.pinTracker(trackerID: thisTracker.id)
+//                }
+//                self.categories = (try? self.trackerCategoryStore.importCategoryWithTrackersFromCoreData()) ?? []
+//                self.currentCategoriesView()
+//                self.placeholderVisible()
+//                self.trackerCollectionView.reloadData()
+//            }
+//            
+//            let editTracker =
+//            UIAction(title: localizedContextMenuEdit,
+//                     image: UIImage(systemName: "pencil")) { action in
+//                self.editTracker(indexPath: indexPath)
+//                AnalyticsService.contextEditTrackerReport()
+//            }
+//            
+//            let deleteAction =
+//            UIAction(title: localizedContextMenuDelete,
+//                     image: UIImage(systemName: "trash"),
+//                     attributes: .destructive) { action in
+//                
+//                self.deleteTracker(indexPath: indexPath)
+//                AnalyticsService.contextDeleteTrackerReport()
+//            }
+//            
+//            return UIMenu(title: "", children: [/*pinTracker, editTracker,*/ deleteAction])
+//        })
+//    }
 }

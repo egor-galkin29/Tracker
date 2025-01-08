@@ -49,8 +49,27 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .compact
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
-        datePicker.locale = Locale(identifier: "ru_RU")
         return datePicker
+    }()
+    
+    private lazy var searchPlaceholderImage: UIImageView = {
+        let image = UIImageView()
+        let placeholder = UIImage(named: "searchPlaceholder")
+        image.image = placeholder
+        image.isHidden = true
+        return image
+    }()
+    
+    /// Текст для заглушки поиска
+    private lazy var searchPlaceholderLabel: UILabel = {
+        let label = UILabel()
+        let localizedSearchPlaceholderLabel = NSLocalizedString("searchPlaceholderLabel", comment: "")
+        label.text = localizedSearchPlaceholderLabel
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.textColor = .black
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
     }()
     
     private let datePickerContainer = UIView()
@@ -187,7 +206,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     private func setupView() {
         view.backgroundColor = .white
         
-        [placeholderImageView, emptyLabel, titleLabel, collectionView, searchContainer].forEach {
+        [placeholderImageView, emptyLabel, titleLabel, collectionView, searchContainer, searchPlaceholderImage, searchPlaceholderLabel].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -224,7 +243,14 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             
             //pickerDate
             pickerDate.centerXAnchor.constraint(equalTo: datePickerContainer.centerXAnchor),
-            pickerDate.centerYAnchor.constraint(equalTo: datePickerContainer.centerYAnchor)
+            pickerDate.centerYAnchor.constraint(equalTo: datePickerContainer.centerYAnchor),
+            
+            //searchPlaceholders
+            searchPlaceholderImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            searchPlaceholderImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            searchPlaceholderLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            searchPlaceholderLabel.topAnchor.constraint(equalTo: searchPlaceholderImage.bottomAnchor, constant: 8),
         ])
     }
     
@@ -247,6 +273,31 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         placeholderVisible()
     }
     
+    @objc func textDidChange(_ searchField: UISearchTextField) {
+        var searchVisibleCategories:[TrackerCategory] = []
+        if let searchText = searchBar.text, !searchText.isEmpty {
+            visibleCategories.forEach {
+                let searchVisibleTracker = $0.trackers.filter({$0.title.lowercased().contains(searchText.lowercased())})
+                if !searchVisibleTracker.isEmpty {
+                    searchVisibleCategories.append(TrackerCategory(title: $0.title, trackers: searchVisibleTracker))
+                    visibleCategories = searchVisibleCategories
+                }
+            }
+            if searchVisibleCategories.isEmpty {
+                collectionView.isHidden = true
+                searchPlaceholderImage.isHidden = false
+                searchPlaceholderLabel.isHidden = false
+            }
+        } else {
+            collectionView.isHidden = false
+            searchPlaceholderImage.isHidden = true
+            searchPlaceholderLabel.isHidden = true
+            currentTrackersView()
+        }
+        collectionView.reloadData()
+        view.endEditing(true)
+    }
+    
     @objc private func hideKeyboard() {
         view.endEditing(true)
     }
@@ -259,7 +310,7 @@ extension TrackersViewController {
         searchBar.delegate = self
         searchBar.searchTextField.layer.masksToBounds = true
         searchBar.backgroundImage = UIImage()
-        
+        searchBar.searchTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         searchContainer.addSubview(searchBar)
         
         searchBar.translatesAutoresizingMaskIntoConstraints = false

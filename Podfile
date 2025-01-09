@@ -6,5 +6,7 @@ target 'Tracker' do
   use_frameworks!
 
   # Pods for Tracker
+
   pod 'YandexMobileMetrica/Dynamic', '4.5.0'
+
 end

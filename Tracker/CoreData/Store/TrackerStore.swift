@@ -72,4 +72,19 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         }
         return trackerCategoryCoreData
     }
+    
+    func deleteTrackerFromCoreData(trackerID: UUID) throws {
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", trackerID.uuidString)
+        
+        do {
+            let trackers = try context.fetch(fetchRequest)
+            for tracker in trackers {
+                context.delete(tracker)
+            }
+            try context.save()
+        } catch {
+            print("ОШИБКА УДАЛЕНИЯ ЗАПИСИ О ТРЕКЕРА \(trackerID) ИЗ CORE DATA: \(error.localizedDescription)")
+        }
+    }
 }

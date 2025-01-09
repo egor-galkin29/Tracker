@@ -19,7 +19,7 @@ final class TrackerRecordStore: NSObject {
             print("не получилось сохранить выполненый трекер в бд")
         }
     }
-    
+    //delete record
     func deleteRecordFromCoreData(id: UUID, trackerDate: Date) {
         let fetchRequest: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
         let calendar = Calendar.current
@@ -84,4 +84,20 @@ final class TrackerRecordStore: NSObject {
             return 0
         }
     }
+    // delete from statistic
+    func deleteRecordFromCoreDataForStatistic(id: UUID) {
+            let fetchRequest: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
+            
+            fetchRequest.predicate = NSPredicate(format: "trackerID == %@", id as CVarArg)
+           
+            do {
+                let trackerRecord = try context.fetch(fetchRequest)
+                for record in trackerRecord {
+                    context.delete(record)
+                }
+                try context.save()
+            } catch {
+                print("ОШИБКА УДАЛЕНИЯ ЗАПИСИ О ВЫПОЛНЕНИИ ТРЕКЕРА \(id) ИЗ CORE DATA: \(error.localizedDescription)")
+            }
+        }
 }

@@ -71,20 +71,20 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
                                                   verticalFittingPriority: .fittingSizeLevel)
     }
 
-//    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
-//        guard indexPaths.count > 0 else {
-//            return nil
-//        }
-//        
-//        let indexPath = indexPaths[0]
-//        let thisTracker = visibleCategories[indexPath.section].trackers[indexPath.item]
-//
-//        return UIContextMenuConfiguration(actionProvider: { actions in
-//            let localizedContextMenuPin = NSLocalizedString("contextMenuPin", comment: "")
-//            let localizedContextMenuUnpin = NSLocalizedString("contextMenuUnpin", comment: "")
-//            let localizedContextMenuEdit = NSLocalizedString("contextMenuEdit", comment: "")
-//            let localizedContextMenuDelete = NSLocalizedString("contextMenuDelete", comment: "")
-//            
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
+        guard indexPaths.count > 0 else {
+            return nil
+        }
+        
+        let indexPath = indexPaths[0]
+        let thisTracker = visibleCategories[indexPath.section].trackers[indexPath.item]
+
+        return UIContextMenuConfiguration(actionProvider: { actions in
+            let localizedContextMenuPin = NSLocalizedString("contextMenuPin", comment: "")
+            let localizedContextMenuUnpin = NSLocalizedString("contextMenuUnpin", comment: "")
+            let localizedContextMenuEdit = NSLocalizedString("contextMenuEdit", comment: "")
+            let localizedContextMenuDelete = NSLocalizedString("contextMenuDelete", comment: "")
+            
 //            let pinTracker = UIAction(title: thisTracker.pinned ? localizedContextMenuUnpin : localizedContextMenuPin,
 //                                      image: UIImage(systemName: "pin")) { [self] action in
 //                
@@ -98,24 +98,66 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
 //                self.placeholderVisible()
 //                self.trackerCollectionView.reloadData()
 //            }
-//            
-//            let editTracker =
-//            UIAction(title: localizedContextMenuEdit,
-//                     image: UIImage(systemName: "pencil")) { action in
-//                self.editTracker(indexPath: indexPath)
-//                AnalyticsService.contextEditTrackerReport()
-//            }
-//            
-//            let deleteAction =
-//            UIAction(title: localizedContextMenuDelete,
-//                     image: UIImage(systemName: "trash"),
-//                     attributes: .destructive) { action in
-//                
-//                self.deleteTracker(indexPath: indexPath)
-//                AnalyticsService.contextDeleteTrackerReport()
-//            }
-//            
-//            return UIMenu(title: "", children: [/*pinTracker, editTracker,*/ deleteAction])
-//        })
-//    }
+            
+            let editTracker =
+            UIAction(title: localizedContextMenuEdit,
+                     image: UIImage(systemName: "pencil")) { action in
+                self.editTracker(indexPath: indexPath)
+                AnalyticsService.contextEditTrackerReport()
+            }
+            
+            let deleteAction =
+            UIAction(title: localizedContextMenuDelete,
+                     image: UIImage(systemName: "trash"),
+                     attributes: .destructive) { action in
+                
+                self.deleteTracker(indexPath: indexPath)
+                AnalyticsService.contextDeleteTrackerReport()
+            }
+            
+            return UIMenu(title: "", children: [/*pinTracker,*/ editTracker, deleteAction])
+        })
+    }
+    
+    private func editTracker(indexPath: IndexPath) {
+            let trackerToEdit = visibleCategories[indexPath.section].trackers[indexPath.item]
+            let trackerCategoryToEdit = visibleCategories[indexPath.section].title
+            let controller = EditTrackerViewController(editedTracker: trackerToEdit, editedCategory: trackerCategoryToEdit, selectedCategory: trackerCategoryToEdit)
+            controller.delegate = self
+            controller.editedTracker = trackerToEdit
+            print(visibleCategories[indexPath.section].categoryTrackers[indexPath.item].trackerColor)
+            controller.trackerType = trackerToEdit.trackerType
+            self.present(controller, animated: true, completion: nil)
+        }
+    
+    private func deleteTracker(indexPath: IndexPath) {
+        showDeleteAlert(indexPath: indexPath)
+    }
+    
+    private func showDeleteAlert(indexPath: IndexPath) {
+        let trackerID = visibleCategories[indexPath.section].trackers[indexPath.item].id
+        
+        let localizedContextDeleteQuestion = NSLocalizedString("contextDeleteQuestion", comment: "")
+        let localizedContextDeleteButton = NSLocalizedString("contextMenuDelete", comment: "")
+        let localizedContextCancelButton = NSLocalizedString("cancelButton", comment: "")
+        
+        let alert = UIAlertController(title: localizedContextDeleteQuestion, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: localizedContextDeleteButton,
+                                      style: .destructive,
+                                      handler: { [weak self] _ in
+            
+            guard let self else { return }
+            self.visibleCategories.removeAll{$0.trackers.contains(where: {$0.id == trackerID})}
+            try? self.trackerStore.deleteTrackerFromCoreData(trackerID: trackerID)
+            trackerRecordStore.deleteRecordFromCoreDataForStatistic(id: trackerID)
+            
+            self.categories = (try? self.trackerCategoryStore.importCategoryWithTrackersFromCoreData()) ?? []
+            self.currentTrackersView()
+            self.placeholderVisible()
+            self.collectionView.reloadData()
+            
+        }))
+        alert.addAction(UIAlertAction(title: localizedContextCancelButton, style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
 }

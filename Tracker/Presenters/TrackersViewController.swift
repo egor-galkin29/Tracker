@@ -5,7 +5,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: UI
     
-    private var collectionView: UICollectionView = {
+     var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 10
@@ -161,7 +161,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: Private Methods
     
-    private func placeholderVisible() {
+    func placeholderVisible() {
         if visibleCategories.isEmpty {
             placeholderImageView.isHidden = false
             emptyLabel.isHidden = false
@@ -254,7 +254,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         ])
     }
     
-    private func currentTrackersView() {
+     func currentTrackersView() {
         let currentDate = pickerDate.date
         let calendar = Calendar.current
         var currentWeekDay = calendar.component(.weekday, from: currentDate)
